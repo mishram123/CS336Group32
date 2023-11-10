@@ -117,29 +117,31 @@
     String Password = request.getParameter("password");
     String role = request.getParameter("role");
 
-    try {
-        ApplicationDB db = new ApplicationDB();
-        Connection connection = db.getConnection();
-        Statement statement = connection.createStatement();
+    if (UserID != null && Password != null && role != null) {
+        try {
+            ApplicationDB db = new ApplicationDB();
+            Connection connection = db.getConnection();
+            Statement statement = connection.createStatement();
 
-        ResultSet rs1 = statement.executeQuery("SELECT * FROM User WHERE UserID='" + UserID + "'");
+            ResultSet rs1 = statement.executeQuery("SELECT * FROM User WHERE UserID='" + UserID + "'");
 
-        if (rs1.next()) {
-            ResultSet rs2 = statement.executeQuery("SELECT * FROM User WHERE UserID='" + UserID + "' AND Password='" + Password + "' AND role='" + role + "'");
-            
-            if (rs2.next()) {
-                session.setAttribute("user", UserID);
-                response.sendRedirect("LoginSuccess.jsp");
+            if (rs1.next()) {
+                ResultSet rs2 = statement.executeQuery("SELECT * FROM User WHERE UserID='" + UserID + "' AND Password='" + Password + "' AND role='" + role + "'");
+                
+                if (rs2.next()) {
+                    session.setAttribute("user", UserID);
+                    response.sendRedirect("LoginSuccess.jsp");
+                } else {
+                    out.println("Invalid password <a href='login.jsp'>try again</a>");
+                }
             } else {
-                out.println("Invalid password <a href='login.jsp'>try again</a>");
+                out.println("Username doesn't exist <a href='register.jsp'>Create An Account</a>");
             }
-        } else {
-            out.println("Username doesn't exist <a href='register.jsp'>Create An Account</a>");
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        out.println("An error occurred while processing your request. Please try again later.");
-    } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            out.println("An error occurred while processing your request. Please try again later.");
+        } 
+    }
         
         
     %>

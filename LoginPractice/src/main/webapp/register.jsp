@@ -1,7 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
+<%@ page import ="java.sql.*" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Register New User</title>
     <style>
         body {
@@ -21,7 +26,7 @@
         }
 
         .welcome-screen {
-            background-color: #007BFF;
+            background-color: #0056b3; /* Slightly darker blue */
             color: #fff;
             border-radius: 5px;
             width: 45%;
@@ -58,7 +63,7 @@
         }
 
         .registration-container button {
-            background-color: #007BFF;
+            background-color: #0056b3; /* Dark blue */
             color: #fff;
             padding: 10px 0;
             border: none;
@@ -68,7 +73,7 @@
         }
 
         .registration-container button:hover {
-            background-color: #0056b3;
+            background-color: #003366; /* Darker blue on hover */
         }
 
         .registration-container p#error {
@@ -76,18 +81,32 @@
             text-align: center;
             margin-top: 15px;
         }
+
+        /* New styles for instructional text */
+        .registration-container p.instruction {
+            color: #555;
+            font-size: 14px;
+            text-align: left;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="welcome-screen">
-            <h2>Welcome to Our Website</h2>
-            <p>This is the welcome content. You can add more information here.</p>
+            <h2>Welcome to The Flight Reservation System User Creation Page</h2>
+            <p>Please create a Username, a strong Password, and choose your Role below</p>
+            <p>Here is a brief description of each role:</p>
+            <p>Customers use their accounts to buy plane tickets and reserve seats. </p>
+            <p>Customer Representatives aid Customers in their purchases.</p>
+            <p>Site Admins oversee the revenues, customer flow, and schematics of the service.</p>
         </div>
 
         <div class="registration-container">
             <h2>Register New User</h2>
-            <form id="registrationForm" action="registration.jsp" method="post">
+            
+
+            <form id="registrationForm" action="register.jsp" method="post">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
                 
@@ -97,8 +116,8 @@
                 <label for="role">Role:</label>
                 <select id="role" name="role">
                     <option value="Customer">Customer</option>
-                    <option value="Customer Representative">Customer Representative</option>
-                    <option value="Site Admin">Site Admin</option>
+                    <option value="CustomerRepresentative">CustomerRepresentative</option>
+                    <option value="SiteAdmin">SiteAdmin</option>
                 </select>
 
                 <button type="submit">Register</button>
@@ -106,9 +125,40 @@
             <p id="error">
                 <%= request.getAttribute("errorMessage") %>
             </p>
+            <%
+            
+            	String UserID = request.getParameter("Username");
+            	String Password = request.getParameter("Password");
+            	String Role = request.getParameter("Role");
+            	
+            	ApplicationDB db = new ApplicationDB();
+            	Connection connection = db.getConnection();
+            	Statement statement = connection.createStatement();
+            	
+            	ResultSet rs = statement.executeQuery("SELECT * from User WHERE UserID='" + UserID + "'");
+            	if(rs.next()){
+            		out.println("UserID exists, please try another <a href='register.jsp'>try again</a>");
+            	}else{
+            		int x = statement.executeUpdate("INSERT INTO User VALUES('" +UserID+ "', '" +Password+ "', '" +Role+ "')");
+            		
+            		if(Role.equals("Customer")){
+            			int y = statement.executeUpdate("INSERT INTO Customer VALUES('" +UserID+ "')");
+            			session.setAttribute("user", UserID); // the username will be stored in the session
+                        response.sendRedirect("LoginSuccess.jsp");
+            		}else if(Role.equals("CustomerRepresentative")){
+            			int y = statement.executeUpdate("INSERT INTO CustomerRepresentative VALUES('" +UserID+ "')");
+            			session.setAttribute("user", UserID); // the username will be stored in the session
+                        response.sendRedirect("LoginSuccess.jsp");
+            		}else if(Role.equals("SiteAdmin")){
+            			int y = statement.executeUpdate("INSERT INTO SiteAdmin VALUES('" +UserID+ "')");
+            			session.setAttribute("user", UserID); // the username will be stored in the session
+                        response.sendRedirect("LoginSuccess.jsp");
+            		}
+            	}
+            	
+            	
+            %>
         </div>
     </div>
-
-    <%-- Server-side registration logic can be implemented in the "registration.jsp" --%>
 </body>
 </html>
