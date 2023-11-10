@@ -1,4 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"  import="com.cs336.pkg.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -91,8 +93,8 @@
             <label for="role">Role:</label>
             <select id="role" name="role">
                 <option value="Customer">Customer</option>
-                <option value="Customer Representative">Customer Representative</option>
-                <option value="Site Admin">Site Admin</option>
+                <option value="CustomerRepresentative">CustomerRepresentative</option>
+                <option value="SiteAdmin">SiteAdmin</option>
             </select>
 
             <button type="submit">Login</button>
@@ -109,19 +111,37 @@
         <img src="airplane_logo.jpg" alt="logo">
     </div>
 
-    <%-- Server-side validation and processing can be done here --%>
+    <%-- Server-side validation and processing--%>
     <%
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String role = request.getParameter("role");
+    String UserID = request.getParameter("username");
+    String Password = request.getParameter("password");
+    String role = request.getParameter("role");
 
-        if ("CS336".equals(username) && "Group32".equals(password)) {
-            // Redirect to a successful login page or perform necessary actions
-            response.sendRedirect("welcome.jsp");
+    try {
+        ApplicationDB db = new ApplicationDB();
+        Connection connection = db.getConnection();
+        Statement statement = connection.createStatement();
+
+        ResultSet rs1 = statement.executeQuery("SELECT * FROM User WHERE UserID='" + UserID + "'");
+
+        if (rs1.next()) {
+            ResultSet rs2 = statement.executeQuery("SELECT * FROM User WHERE UserID='" + UserID + "' AND Password='" + Password + "' AND role='" + role + "'");
+            
+            if (rs2.next()) {
+                session.setAttribute("user", UserID);
+                response.sendRedirect("LoginSuccess.jsp");
+            } else {
+                out.println("Invalid password <a href='login.jsp'>try again</a>");
+            }
         } else {
-            // Display an error message
-            request.setAttribute("errorMessage", "Invalid username or password.");
+            out.println("Username doesn't exist <a href='register.jsp'>Create An Account</a>");
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        out.println("An error occurred while processing your request. Please try again later.");
+    } 
+        
+        
     %>
 </body>
 </html>
