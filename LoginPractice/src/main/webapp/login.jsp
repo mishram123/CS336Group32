@@ -132,7 +132,7 @@
                     session.setAttribute("user", UserID);
                     response.sendRedirect("LoginSuccess.jsp");
                 } else {
-                    out.println("Invalid password <a href='login.jsp'>try again</a>");
+                    out.println("Invalid password or Role Selection<a href='login.jsp'>try again</a>");
                 }
             } else {
                 out.println("Username doesn't exist <a href='register.jsp'>Create An Account</a>");

@@ -127,9 +127,9 @@
             </p>
             <%
             
-            	String UserID = request.getParameter("Username");
-            	String Password = request.getParameter("Password");
-            	String Role = request.getParameter("Role");
+            	String UserID = request.getParameter("username");
+            	String Password = request.getParameter("password");
+            	String Role = request.getParameter("role");
             	
             	ApplicationDB db = new ApplicationDB();
             	Connection connection = db.getConnection();
@@ -139,21 +139,20 @@
             	if(rs.next()){
             		out.println("UserID exists, please try another <a href='register.jsp'>try again</a>");
             	}else{
-            		int x = statement.executeUpdate("INSERT INTO User VALUES('" +UserID+ "', '" +Password+ "', '" +Role+ "')");
+            		int x = statement.executeUpdate("INSERT INTO User(UserID, Password, role) VALUES('" +UserID+ "', '" +Password+ "', '" +Role+ "')");
             		
             		if(Role.equals("Customer")){
-            			int y = statement.executeUpdate("INSERT INTO Customer VALUES('" +UserID+ "')");
-            			session.setAttribute("user", UserID); // the username will be stored in the session
-                        response.sendRedirect("LoginSuccess.jsp");
+            			int y = statement.executeUpdate("INSERT INTO Customer(UserID, CustomerIdentifier) VALUES('" +UserID+ "', '" +UserID+ "')");
             		}else if(Role.equals("CustomerRepresentative")){
-            			int y = statement.executeUpdate("INSERT INTO CustomerRepresentative VALUES('" +UserID+ "')");
-            			session.setAttribute("user", UserID); // the username will be stored in the session
-                        response.sendRedirect("LoginSuccess.jsp");
+            			int y = statement.executeUpdate("INSERT INTO CustomerRepresentative(UserID, RepresentativeIdentifier) VALUES('" +UserID+ "', '" +UserID+ "')");
+            			
             		}else if(Role.equals("SiteAdmin")){
-            			int y = statement.executeUpdate("INSERT INTO SiteAdmin VALUES('" +UserID+ "')");
-            			session.setAttribute("user", UserID); // the username will be stored in the session
-                        response.sendRedirect("LoginSuccess.jsp");
+            			int y = statement.executeUpdate("INSERT INTO SiteAdmin(UserID, AdminIdentifier) VALUES('" +UserID+ "', '" +UserID+ "')");
+            			
             		}
+            		
+            		session.setAttribute("user", UserID); // the username will be stored in the session
+                    response.sendRedirect("LoginSuccess.jsp");
             	}
             	
             	

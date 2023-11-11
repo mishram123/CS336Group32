@@ -27,7 +27,7 @@ public class ApplicationDB{
 		}
 		try {
 			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "L0chan#M123");
+			connection = DriverManager.getConnection(connectionUrl,"root", "Enter Your MYSQL Password Here");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

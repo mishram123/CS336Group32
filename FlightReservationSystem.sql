@@ -62,7 +62,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES ('Customer1','Customer1');
+INSERT INTO `customer` VALUES ('Customer1','Customer1'),('Customer12','Customer12');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,6 +87,7 @@ CREATE TABLE `customerrepresentative` (
 
 LOCK TABLES `customerrepresentative` WRITE;
 /*!40000 ALTER TABLE `customerrepresentative` DISABLE KEYS */;
+INSERT INTO `customerrepresentative` VALUES ('Rep1','Rep1');
 /*!40000 ALTER TABLE `customerrepresentative` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,6 +112,7 @@ CREATE TABLE `siteadmin` (
 
 LOCK TABLES `siteadmin` WRITE;
 /*!40000 ALTER TABLE `siteadmin` DISABLE KEYS */;
+INSERT INTO `siteadmin` VALUES ('Admin1','Admin1');
 /*!40000 ALTER TABLE `siteadmin` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +137,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('Customer1','CustomerPassword','Customer'),('null','null','null');
+INSERT INTO `user` VALUES ('Admin1','Admin1','SiteAdmin'),('Customer1','CustomerPassword','Customer'),('Customer12','CustomerPassword12','Customer'),('null','null','null'),('Rep1','Rep1','CustomerRepresentative');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -148,4 +150,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-10 18:27:24
+-- Dump completed on 2023-11-10 20:42:17
