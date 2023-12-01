@@ -136,11 +136,11 @@
                     }
                     if(role.equals("CustomerRepresentative")){
                     	 session.setAttribute("user", UserID);
-                         response.sendRedirect("LoginSuccess.jsp");	
+                         response.sendRedirect("Rep/CustomerRepMainPage.jsp");	
                     }
                     if(role.equals("SiteAdmin")){
                     	 session.setAttribute("user", UserID);
-                         response.sendRedirect("LoginSuccess.jsp");
+                         response.sendRedirect("Admin/AdminMainPage.jsp");
                     }
                 } else {
                     out.println("Invalid password or Role Selection<a href='login.jsp'>try again</a>");
