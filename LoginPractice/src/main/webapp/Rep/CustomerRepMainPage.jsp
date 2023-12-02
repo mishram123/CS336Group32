@@ -64,14 +64,12 @@
         </div>
         
         <div class="functionality-block">
-            <h2>Aircraft &amp; Flight Management</h2>
+            <h2>Aircraft & Flight Management</h2>
             <ul>
                 <li><a href="addAircraft.jsp">Add Aircraft</a></li>
                 <li><a href="editAircraft.jsp">Edit Aircraft</a></li>
                 <li><a href="deleteAircraft.jsp">Delete Aircraft</a></li>
-                <li><a href="addAirport.jsp">Add Airport</a></li>
-                <li><a href="editAirport.jsp">Edit Airport</a></li>
-                <li><a href="deleteAirport.jsp">Delete Airport</a></li>
+                <li><a href="CustomerRepEditAirport.jsp">Edit Airport</a></li>
                 <li><a href="addFlight.jsp">Add Flight</a></li>
                 <li><a href="editFlight.jsp">Edit Flight</a></li>
                 <li><a href="deleteFlight.jsp">Delete Flight</a></li>
@@ -79,7 +77,7 @@
         </div>
         
         <div class="functionality-block">
-            <h2>Reporting &amp; Lists</h2>
+            <h2>Reporting & Lists</h2>
             <ul>
                 <li><a href="waitingList.jsp">Passengers on Waiting List</a></li>
                 <li><a href="flightsByAirport.jsp">Flights by Airport</a></li>
