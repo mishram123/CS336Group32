@@ -38,6 +38,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
+INSERT INTO `account` VALUES ('Customer1','CustomerPassword',NULL),('Customer12','CustomerPassword12',NULL);
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -140,6 +141,35 @@ INSERT INTO `airport` VALUES ('AMD'),('AMS'),('ARN'),('ATL'),('AUH'),('BCN'),('B
 UNLOCK TABLES;
 
 --
+-- Table structure for table `assists`
+--
+
+DROP TABLE IF EXISTS `assists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `assists` (
+  `CustomerIdentifier` varchar(50) NOT NULL,
+  `RepresentativeIdentifier` varchar(20) NOT NULL,
+  `makeReservation` varchar(50) DEFAULT NULL,
+  `questions` varchar(20) DEFAULT NULL,
+  `editReservation` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`CustomerIdentifier`,`RepresentativeIdentifier`),
+  KEY `RepresentativeIdentifier` (`RepresentativeIdentifier`),
+  CONSTRAINT `assists_ibfk_1` FOREIGN KEY (`CustomerIdentifier`) REFERENCES `customer` (`UserID`),
+  CONSTRAINT `assists_ibfk_2` FOREIGN KEY (`RepresentativeIdentifier`) REFERENCES `customerrepresentative` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `assists`
+--
+
+LOCK TABLES `assists` WRITE;
+/*!40000 ALTER TABLE `assists` DISABLE KEYS */;
+/*!40000 ALTER TABLE `assists` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `customer`
 --
 
@@ -187,6 +217,49 @@ LOCK TABLES `customerrepresentative` WRITE;
 /*!40000 ALTER TABLE `customerrepresentative` DISABLE KEYS */;
 INSERT INTO `customerrepresentative` VALUES ('Rep1','Rep1');
 /*!40000 ALTER TABLE `customerrepresentative` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customersearchesfor`
+--
+
+DROP TABLE IF EXISTS `customersearchesfor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customersearchesfor` (
+  `customeridentifier` varchar(50) NOT NULL,
+  `flightdate` date DEFAULT NULL,
+  `isflexible` tinyint(1) DEFAULT NULL,
+  `flightnumber` varchar(10) DEFAULT NULL,
+  `airline` varchar(2) DEFAULT NULL,
+  `takeofftime` time DEFAULT NULL,
+  `landingtime` time DEFAULT NULL,
+  `numberstops` int DEFAULT NULL,
+  `price` float DEFAULT NULL,
+  `departureairport` varchar(3) DEFAULT NULL,
+  `arrivalairport` varchar(3) DEFAULT NULL,
+  `flight_type` varchar(30) DEFAULT NULL,
+  `flightduration` time DEFAULT NULL,
+  PRIMARY KEY (`customeridentifier`),
+  KEY `flightnumber` (`flightnumber`),
+  KEY `departureairport` (`departureairport`),
+  KEY `arrivalairport` (`arrivalairport`),
+  KEY `airline` (`airline`),
+  CONSTRAINT `customersearchesfor_ibfk_1` FOREIGN KEY (`customeridentifier`) REFERENCES `customer` (`UserID`),
+  CONSTRAINT `customersearchesfor_ibfk_2` FOREIGN KEY (`flightnumber`) REFERENCES `flightservices` (`flightNumber`),
+  CONSTRAINT `customersearchesfor_ibfk_3` FOREIGN KEY (`departureairport`) REFERENCES `airport` (`ThreeLetterID`),
+  CONSTRAINT `customersearchesfor_ibfk_4` FOREIGN KEY (`arrivalairport`) REFERENCES `airport` (`ThreeLetterID`),
+  CONSTRAINT `customersearchesfor_ibfk_5` FOREIGN KEY (`airline`) REFERENCES `airlinecompany` (`TwoLetterID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customersearchesfor`
+--
+
+LOCK TABLES `customersearchesfor` WRITE;
+/*!40000 ALTER TABLE `customersearchesfor` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customersearchesfor` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -270,6 +343,62 @@ LOCK TABLES `flightservices` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `getrevenuesummary`
+--
+
+DROP TABLE IF EXISTS `getrevenuesummary`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `getrevenuesummary` (
+  `UserID` varchar(30) NOT NULL,
+  `AdminIdentifier` varchar(20) NOT NULL,
+  `TwoLetterID` varchar(2) NOT NULL,
+  `MonthlySalesReport` varchar(200) DEFAULT NULL,
+  `MostRevenueCustomer` varchar(50) DEFAULT NULL,
+  `MostActiveFlightList` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`UserID`,`AdminIdentifier`,`TwoLetterID`),
+  KEY `TwoLetterID` (`TwoLetterID`),
+  CONSTRAINT `getrevenuesummary_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `siteadmin` (`UserID`),
+  CONSTRAINT `getrevenuesummary_ibfk_2` FOREIGN KEY (`TwoLetterID`) REFERENCES `airlinecompany` (`TwoLetterID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `getrevenuesummary`
+--
+
+LOCK TABLES `getrevenuesummary` WRITE;
+/*!40000 ALTER TABLE `getrevenuesummary` DISABLE KEYS */;
+/*!40000 ALTER TABLE `getrevenuesummary` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ifnoseat`
+--
+
+DROP TABLE IF EXISTS `ifnoseat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ifnoseat` (
+  `TicketNumber` varchar(10) NOT NULL,
+  `accountID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TicketNumber`,`accountID`),
+  KEY `accountID` (`accountID`),
+  CONSTRAINT `ifnoseat_ibfk_1` FOREIGN KEY (`TicketNumber`) REFERENCES `ticket` (`TicketNumber`),
+  CONSTRAINT `ifnoseat_ibfk_2` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ifnoseat`
+--
+
+LOCK TABLES `ifnoseat` WRITE;
+/*!40000 ALTER TABLE `ifnoseat` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ifnoseat` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `internationalflight`
 --
 
@@ -293,6 +422,44 @@ CREATE TABLE `internationalflight` (
 LOCK TABLES `internationalflight` WRITE;
 /*!40000 ALTER TABLE `internationalflight` DISABLE KEYS */;
 /*!40000 ALTER TABLE `internationalflight` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `list`
+--
+
+DROP TABLE IF EXISTS `list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `list` (
+  `flightNumber` varchar(5) NOT NULL,
+  `flightAirline` varchar(2) DEFAULT NULL,
+  `AdminIdentifier` varchar(20) NOT NULL,
+  `RepresentativeIdentifier` varchar(20) NOT NULL,
+  `CustomerIdentifier` varchar(50) NOT NULL,
+  `retrieve` tinyint(1) DEFAULT NULL,
+  `produce` tinyint(1) DEFAULT NULL,
+  `request` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`flightNumber`,`AdminIdentifier`,`RepresentativeIdentifier`,`CustomerIdentifier`),
+  KEY `flightAirline` (`flightAirline`),
+  KEY `AdminIdentifier` (`AdminIdentifier`),
+  KEY `RepresentativeIdentifier` (`RepresentativeIdentifier`),
+  KEY `CustomerIdentifier` (`CustomerIdentifier`),
+  CONSTRAINT `list_ibfk_1` FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`),
+  CONSTRAINT `list_ibfk_2` FOREIGN KEY (`flightAirline`) REFERENCES `airlinecompany` (`TwoLetterID`),
+  CONSTRAINT `list_ibfk_3` FOREIGN KEY (`AdminIdentifier`) REFERENCES `siteadmin` (`UserID`),
+  CONSTRAINT `list_ibfk_4` FOREIGN KEY (`RepresentativeIdentifier`) REFERENCES `customerrepresentative` (`UserID`),
+  CONSTRAINT `list_ibfk_5` FOREIGN KEY (`CustomerIdentifier`) REFERENCES `customer` (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `list`
+--
+
+LOCK TABLES `list` WRITE;
+/*!40000 ALTER TABLE `list` DISABLE KEYS */;
+/*!40000 ALTER TABLE `list` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -495,6 +662,33 @@ LOCK TABLES `ticketflightassociatedwith` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `transaction`
+--
+
+DROP TABLE IF EXISTS `transaction`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transaction` (
+  `accountID` varchar(20) NOT NULL,
+  `TicketNumber` varchar(10) NOT NULL,
+  `seatAvailable` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`accountID`,`TicketNumber`),
+  KEY `TicketNumber` (`TicketNumber`),
+  CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
+  CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`TicketNumber`) REFERENCES `ticket` (`TicketNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transaction`
+--
+
+LOCK TABLES `transaction` WRITE;
+/*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -518,6 +712,34 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES ('Admin1','Admin1','SiteAdmin'),('Customer1','CustomerPassword','Customer'),('Customer12','CustomerPassword12','Customer'),('null','null','null'),('Rep1','Rep1','CustomerRepresentative');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `waitinglist`
+--
+
+DROP TABLE IF EXISTS `waitinglist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `waitinglist` (
+  `accountID` varchar(20) NOT NULL,
+  `TicketNumber` varchar(10) NOT NULL,
+  `numberInLine` int DEFAULT NULL,
+  `alertSent` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`accountID`,`TicketNumber`),
+  KEY `TicketNumber` (`TicketNumber`),
+  CONSTRAINT `waitinglist_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
+  CONSTRAINT `waitinglist_ibfk_2` FOREIGN KEY (`TicketNumber`) REFERENCES `ticket` (`TicketNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `waitinglist`
+--
+
+LOCK TABLES `waitinglist` WRITE;
+/*!40000 ALTER TABLE `waitinglist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `waitinglist` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -528,4 +750,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-04 14:59:43
+-- Dump completed on 2023-12-04 16:58:00
