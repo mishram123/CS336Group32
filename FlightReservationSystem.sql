@@ -314,6 +314,7 @@ CREATE TABLE `domesticflight` (
 
 LOCK TABLES `domesticflight` WRITE;
 /*!40000 ALTER TABLE `domesticflight` DISABLE KEYS */;
+INSERT INTO `domesticflight` VALUES ('F009','A009'),('F010','A010'),('F011','A011'),('F012','A012'),('F013','A013'),('F014','A014'),('F015','A015');
 /*!40000 ALTER TABLE `domesticflight` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,6 +340,7 @@ CREATE TABLE `flightservices` (
 
 LOCK TABLES `flightservices` WRITE;
 /*!40000 ALTER TABLE `flightservices` DISABLE KEYS */;
+INSERT INTO `flightservices` VALUES ('F001','A001'),('F002','A002'),('F003','A003'),('F004','A004'),('F005','A005'),('F006','A006'),('F007','A007'),('F008','A008'),('F009','A009'),('F010','A010'),('F011','A011'),('F012','A012'),('F013','A013'),('F014','A014'),('F015','A015');
 /*!40000 ALTER TABLE `flightservices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,6 +423,7 @@ CREATE TABLE `internationalflight` (
 
 LOCK TABLES `internationalflight` WRITE;
 /*!40000 ALTER TABLE `internationalflight` DISABLE KEYS */;
+INSERT INTO `internationalflight` VALUES ('F001','A001'),('F002','A002'),('F003','A003'),('F004','A004'),('F005','A005'),('F006','A006'),('F007','A007'),('F008','A008');
 /*!40000 ALTER TABLE `internationalflight` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -750,4 +753,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-04 16:58:00
+-- Dump completed on 2023-12-05 14:44:49
