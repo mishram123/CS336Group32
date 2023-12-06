@@ -44,7 +44,13 @@
         button:hover {
             background-color: #0056b3;
         }
-        
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
         /* Add more styles as needed */
     </style>
     <script>
@@ -56,6 +62,22 @@
                 window.location.href = "addQuestion.jsp?newQuestion=" + encodeURIComponent(newQuestion);
             }
         }
+
+        function searchQuestions() {
+            var searchTerm = document.getElementById("searchTerm").value.toLowerCase();
+            var rows = document.querySelectorAll("table tr");
+
+            for (var i = 1; i < rows.length; i++) { // start from 1 to skip the header row
+                var questionText = rows[i].cells[0].innerText.toLowerCase();
+                var answerText = rows[i].cells[1].innerText.toLowerCase();
+
+                if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
     </script>
 </head>
 
@@ -63,8 +85,12 @@
     <!-- Back Button -->
     <button onclick="location.href='CustomerMainPage.jsp'">Back to Customer Main Page</button>
     <button onclick="location.href='../Logout.jsp'" style="background-color: #007BFF; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Log out</button>
-    
+
     <h2>Frequently Asked Questions</h2>
+
+    <!-- Search Bar -->
+    <label for="searchTerm">Search:</label>
+    <input type="text" id="searchTerm" oninput="searchQuestions()">
 
     <table>
         <tr>
