@@ -63,7 +63,7 @@ CREATE TABLE `aircraft` (
 
 LOCK TABLES `aircraft` WRITE;
 /*!40000 ALTER TABLE `aircraft` DISABLE KEYS */;
-INSERT INTO `aircraft` VALUES ('A001',150,'Monday,Wednesday,Friday'),('A002',200,'Tuesday,Thursday,Saturday,Sunday'),('A003',180,'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday'),('A004',160,'Monday,Thursday,Saturday'),('A005',190,'Tuesday,Friday,Sunday'),('A006',170,'Monday,Tuesday,Thursday,Saturday,Sunday'),('A007',220,'Wednesday,Saturday,Sunday'),('A008',140,'Tuesday,Wednesday,Friday,Saturday'),('A009',210,'Monday,Wednesday,Saturday,Sunday'),('A010',180,'Tuesday,Thursday,Sunday'),('A011',160,'Monday,Wednesday,Friday,Saturday'),('A012',190,'Tuesday,Thursday,Sunday'),('A013',180,'Monday,Wednesday,Saturday,Sunday'),('A014',170,'Tuesday,Thursday,Friday,Sunday'),('A015',200,'Monday,Wednesday,Friday,Sunday');
+INSERT INTO `aircraft` VALUES ('A001',150,'Monday,Wednesday,Friday'),('A002',200,'Tuesday,Thursday,Saturday,Sunday'),('A003',180,'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday'),('A004',160,'Monday,Thursday,Saturday'),('A005',190,'Tuesday,Friday,Sunday'),('A006',170,'Monday,Tuesday,Thursday,Saturday,Sunday'),('A007',220,'Wednesday,Saturday,Sunday'),('A008',140,'Tuesday,Wednesday,Friday,Saturday'),('A009',210,'Monday,Wednesday,Saturday,Sunday'),('A010',180,'Tuesday,Thursday,Sunday'),('A011',150,'Monday,Wednesday,Friday,Saturday'),('A012',190,'Tuesday,Thursday,Sunday'),('A013',180,'Monday,Wednesday,Saturday,Sunday'),('A014',170,'Tuesday,Thursday,Friday,Sunday'),('A015',200,'Monday,Wednesday,Friday,Sunday');
 /*!40000 ALTER TABLE `aircraft` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +215,7 @@ CREATE TABLE `customerrepresentative` (
 
 LOCK TABLES `customerrepresentative` WRITE;
 /*!40000 ALTER TABLE `customerrepresentative` DISABLE KEYS */;
-INSERT INTO `customerrepresentative` VALUES ('Rep1','Rep1');
+INSERT INTO `customerrepresentative` VALUES ('Rep1','Rep1'),('Rep3','Rep3');
 /*!40000 ALTER TABLE `customerrepresentative` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,33 +292,6 @@ LOCK TABLES `departurearrival` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `domesticflight`
---
-
-DROP TABLE IF EXISTS `domesticflight`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `domesticflight` (
-  `flightNumber` varchar(5) NOT NULL,
-  `AircraftID` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`flightNumber`),
-  KEY `AircraftID` (`AircraftID`),
-  CONSTRAINT `domesticflight_ibfk_1` FOREIGN KEY (`AircraftID`) REFERENCES `aircraft` (`AircraftID`),
-  CONSTRAINT `domesticflight_ibfk_2` FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `domesticflight`
---
-
-LOCK TABLES `domesticflight` WRITE;
-/*!40000 ALTER TABLE `domesticflight` DISABLE KEYS */;
-INSERT INTO `domesticflight` VALUES ('F009','A009'),('F010','A010'),('F011','A011'),('F012','A012'),('F013','A013'),('F014','A014'),('F015','A015');
-/*!40000 ALTER TABLE `domesticflight` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `flightservices`
 --
 
@@ -328,6 +301,18 @@ DROP TABLE IF EXISTS `flightservices`;
 CREATE TABLE `flightservices` (
   `flightNumber` varchar(5) NOT NULL,
   `AircraftID` varchar(10) DEFAULT NULL,
+  `origin_airport` varchar(3) NOT NULL,
+  `destination_airport` varchar(3) NOT NULL,
+  `economy_fare` float DEFAULT NULL,
+  `business_fare` float DEFAULT NULL,
+  `first_class_fare` float DEFAULT NULL,
+  `airline` varchar(2) DEFAULT NULL,
+  `number_of_stops` int DEFAULT NULL,
+  `flight_type` enum('domestic','international') NOT NULL DEFAULT 'domestic',
+  `departure_date` date DEFAULT NULL,
+  `departure_times` time DEFAULT NULL,
+  `arrival_date` date DEFAULT NULL,
+  `arrival_times` time DEFAULT NULL,
   PRIMARY KEY (`flightNumber`),
   KEY `AircraftID` (`AircraftID`),
   CONSTRAINT `flightservices_ibfk_1` FOREIGN KEY (`AircraftID`) REFERENCES `aircraft` (`AircraftID`)
@@ -340,7 +325,7 @@ CREATE TABLE `flightservices` (
 
 LOCK TABLES `flightservices` WRITE;
 /*!40000 ALTER TABLE `flightservices` DISABLE KEYS */;
-INSERT INTO `flightservices` VALUES ('F001','A001'),('F002','A002'),('F003','A003'),('F004','A004'),('F005','A005'),('F006','A006'),('F007','A007'),('F008','A008'),('F009','A009'),('F010','A010'),('F011','A011'),('F012','A012'),('F013','A013'),('F014','A014'),('F015','A015');
+INSERT INTO `flightservices` VALUES ('F001','A001','JFK','LAX',300,600,1000,'AA',0,'domestic','2023-12-06','12:00:00','2023-12-06','18:00:00'),('F002','A010','LAX','JFK',200,400,1100,'AA',1,'domestic','2023-12-08','08:00:00','2023-12-08','18:00:00');
 /*!40000 ALTER TABLE `flightservices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -398,33 +383,6 @@ CREATE TABLE `ifnoseat` (
 LOCK TABLES `ifnoseat` WRITE;
 /*!40000 ALTER TABLE `ifnoseat` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ifnoseat` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `internationalflight`
---
-
-DROP TABLE IF EXISTS `internationalflight`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `internationalflight` (
-  `flightNumber` varchar(5) NOT NULL,
-  `AircraftID` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`flightNumber`),
-  KEY `AircraftID` (`AircraftID`),
-  CONSTRAINT `internationalflight_ibfk_1` FOREIGN KEY (`AircraftID`) REFERENCES `aircraft` (`AircraftID`),
-  CONSTRAINT `internationalflight_ibfk_2` FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `internationalflight`
---
-
-LOCK TABLES `internationalflight` WRITE;
-/*!40000 ALTER TABLE `internationalflight` DISABLE KEYS */;
-INSERT INTO `internationalflight` VALUES ('F001','A001'),('F002','A002'),('F003','A003'),('F004','A004'),('F005','A005'),('F006','A006'),('F007','A007'),('F008','A008');
-/*!40000 ALTER TABLE `internationalflight` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -712,7 +670,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('Admin1','Admin1','SiteAdmin'),('Customer1','CustomerPassword','Customer'),('Customer12','CustomerPassword12','Customer'),('null','null','null'),('Rep1','Rep1','CustomerRepresentative');
+INSERT INTO `user` VALUES ('Admin1','Admin1','SiteAdmin'),('Customer1','CustomerPassword','Customer'),('Customer12','CustomerPassword12','Customer'),('null','null','null'),('Rep1','Rep1','CustomerRepresentative'),('Rep3','Rep3','Customer');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -753,4 +711,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-05 14:44:49
+-- Dump completed on 2023-12-06 10:04:11
