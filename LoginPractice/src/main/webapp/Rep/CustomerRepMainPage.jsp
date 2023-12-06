@@ -60,7 +60,7 @@
             <ul>
                 <li><a href="makeReservation.jsp">Make Flight Reservation</a></li>
                 <li><a href="editReservation.jsp">Edit Flight Reservation</a></li>
-                <li><a href="replyToQuestions.jsp">Reply to User Questions</a></li>
+                <li><a href="replytofaq.jsp">Reply to User Questions</a></li>
             </ul>
         </div>
         

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
@@ -48,6 +47,19 @@
             text-decoration: none;
             border-radius: 5px;
         }
+        .faq-section {
+            margin-left: 20px; /* Adjust the margin as needed */
+        }
+        .faq-button {
+            display: block;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #337ab7; /* Choose a color that fits your design */
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
         .reservations {
             position: absolute;
             left: 20px;
@@ -86,6 +98,11 @@
         <img src="../airplane_logo.jpg" alt="Airplane Logo" class="airplane-logo">
         <div class="search-section">
             <a href="searchFlights.jsp" class="search-button">Search Flights</a>
+        </div>
+
+        <!-- Add FAQ button here -->
+        <div class="faq-section">
+            <a href="faq.jsp" class="faq-button">FAQ</a>
         </div>
     </div>
 

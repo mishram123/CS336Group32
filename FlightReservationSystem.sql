@@ -292,6 +292,31 @@ LOCK TABLES `departurearrival` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `faq`
+--
+
+DROP TABLE IF EXISTS `faq`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `faq` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `question` varchar(255) NOT NULL,
+  `answer` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `faq`
+--
+
+LOCK TABLES `faq` WRITE;
+/*!40000 ALTER TABLE `faq` DISABLE KEYS */;
+INSERT INTO `faq` VALUES (2,'How do I create a new account?','Log out. In the login page, click the register icon hyperlink. In the registration form, enter your new Username, Password, and choose customer account');
+/*!40000 ALTER TABLE `faq` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `flightservices`
 --
 
@@ -711,4 +736,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-06 10:04:11
+-- Dump completed on 2023-12-06 14:50:06
