@@ -52,6 +52,8 @@
     <div class="header">
         <h1>Admin Dashboard</h1>
     </div>
+    <button onclick="location.href='Logout.jsp'" style="background-color: #007BFF; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Log out</button>
+    
     
     <div class="container">
         <div class="admin-option">
@@ -60,6 +62,12 @@
                 <li><a href="addCustomer.jsp">Add Customer</a></li>
                 <li><a href="editCustomer.jsp">Edit Customer</a></li>
                 <li><a href="deleteCustomer.jsp">Delete Customer</a></li>
+                
+                <!-- Add/Edit/Delete Customer Representative Buttons -->
+                <li><a href="addCustomerRep.jsp">Add Customer Representative</a></li>
+                <li><a href="editCustomerRep.jsp">Edit Customer Representative</a></li>
+                <li><a href="deleteCustomerRep.jsp">Delete Customer Representative</a></li>
+                <!-- End of Customer Representative Buttons -->
             </ul>
         </div>
         

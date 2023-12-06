@@ -28,7 +28,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Congratulations! Login Successful</h2>
+        <h2>Congratulations! New Account Creation Successful. You can now login with this account. Please log out and login with your account.</h2>
           <p>Welcome,<%=session.getAttribute("user") %>!</p>
         <a href="Logout.jsp">Log out</a>
         <!-- You can customize the content of the successful login page -->
