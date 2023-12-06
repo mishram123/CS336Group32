@@ -52,6 +52,7 @@
     <div class="header">
         <h1>Customer Representative Dashboard</h1>
     </div>
+    <button onclick="location.href='../Logout.jsp'" style="background-color: #007BFF; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Log out</button>
     
     <div class="container">
         <div class="functionality-block">
@@ -69,7 +70,7 @@
                 <li><a href="addAircraft.jsp">Add Aircraft</a></li>
                 <li><a href="editAircraft.jsp">Edit Aircraft</a></li>
                 <li><a href="deleteAircraft.jsp">Delete Aircraft</a></li>
-                <li><a href="CustomerRepEditAirport.jsp">Edit Airport</a></li>
+                <li><a href="CustomerRepEditAirport.jsp">Add/Edit/Delete Airport</a></li>
                 <li><a href="addFlight.jsp">Add Flight</a></li>
                 <li><a href="editFlight.jsp">Edit Flight</a></li>
                 <li><a href="deleteFlight.jsp">Delete Flight</a></li>
