@@ -61,6 +61,10 @@
         <!-- Date field for return date for round-trip -->
         <label for="returnDate">Return Date:</label>
         <input type="date" id="returnDate" name="returnDate">
+        
+        <!-- Checkbox for flexibility -->
+    	<label for="isFlexible">Flexible Dates:</label>
+    	<input type="checkbox" id="isFlexible" name="isFlexible">
 
         <button type="submit">Search</button>
     </form>
@@ -91,6 +95,7 @@
             boolean roundTrip = "on".equals(request.getParameter("roundTripCheckbox"));
             String departureDate = request.getParameter("departureDate");
             String returnDate = request.getParameter("returnDate");
+            boolean isFlexible = "on".equals(request.getParameter("isFlexible"));
             
             PreparedStatement preparedStatement = null; // Declare preparedStatement
 
@@ -103,36 +108,69 @@
 
                 if (roundTrip) {
                     // Round trip search: check departure and arrival airports for both outbound and return
-                    query = "SELECT * FROM flightservices WHERE ((origin_airport = ? AND destination_airport = ?) OR (origin_airport = ? AND destination_airport = ?)) AND (departure_date >= ? OR departure_date >= ?)";
-                    preparedStatement = connection.prepareStatement(query);
+                    query = "SELECT * FROM flightservices WHERE " +
+				            "((origin_airport = ? AND destination_airport = ?) OR (origin_airport = ? AND destination_airport = ?)) ";
+				
+				    if (isFlexible) {
+				        query += "AND (departure_date BETWEEN ? AND DATE_ADD(?, INTERVAL 3 DAY)) ";
+				    } else {
+				        query += "AND (departure_date = ? OR departure_date = ?) ";
+				    }
+    				preparedStatement = connection.prepareStatement(query);
                     preparedStatement.setString(1, startAirport);
                     preparedStatement.setString(2, endAirport);
                     preparedStatement.setString(3, endAirport); // Flip the airports for the return leg
                     preparedStatement.setString(4, startAirport); // Flip the airports for the return leg
-
-                    // Check if departureDate is valid
-                    if (departureDate != null && !departureDate.isEmpty()) {
-                        preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
+                    if (isFlexible) {
+                    	if (departureDate != null && !departureDate.isEmpty()) {
+                    		preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
+                            preparedStatement.setDate(6, java.sql.Date.valueOf(departureDate));
+                        } else {
+                            // Handle the case where departureDate is not valid
+                            // You might want to set a default date or handle it in another way
+                        }
+                        
                     } else {
-                        // Handle the case where departureDate is not valid
-                        // You might want to set a default date or handle it in another way
+                    	if (departureDate != null && !departureDate.isEmpty()) {
+                    		preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
+                            preparedStatement.setDate(6, java.sql.Date.valueOf(returnDate));
+                        } else {
+                            // Handle the case where departureDate is not valid
+                            // You might want to set a default date or handle it in another way
+                        }
+                        
                     }
-
-                    preparedStatement.setDate(6, java.sql.Date.valueOf(returnDate));
                 } else {
                     // One-way search: check only departure airport
-                    query = "SELECT * FROM flightservices WHERE origin_airport = ? AND destination_airport = ? AND departure_date = ?";
-                    preparedStatement = connection.prepareStatement(query);
-                    preparedStatement.setString(1, startAirport);
-                    preparedStatement.setString(2, endAirport);
-
-                    // Check if departureDate is valid
-                    if (departureDate != null && !departureDate.isEmpty()) {
-                        preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
-                    } else {
-                        // Handle the case where departureDate is not valid
-                        // You might want to set a default date or handle it in another way
-                    }
+                    // One-way search: check only departure airport
+			        query = "SELECT * FROM flightservices WHERE origin_airport = ? AND destination_airport = ? ";
+			
+			        if (isFlexible) {
+			            query += "AND (departure_date BETWEEN ? AND DATE_ADD(?, INTERVAL 3 DAY)) ";
+			        } else {
+			            query += "AND (departure_date = ?) ";
+			        }
+			
+			        preparedStatement = connection.prepareStatement(query);
+			        preparedStatement.setString(1, startAirport);
+			        preparedStatement.setString(2, endAirport);
+			
+			        if (isFlexible) {
+			            if (departureDate != null && !departureDate.isEmpty()) {
+			                preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
+			                preparedStatement.setDate(4, java.sql.Date.valueOf(departureDate));
+			            } else {
+			                // Handle the case where departureDate is not valid
+			                // You might want to set a default date or handle it in another way
+			            }
+			        } else {
+			            if (departureDate != null && !departureDate.isEmpty()) {
+			                preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
+			            } else {
+			                // Handle the case where departureDate is not valid
+			                // You might want to set a default date or handle it in another way
+			            }
+			        }
                 }
                 ResultSet rs = preparedStatement.executeQuery();
 
