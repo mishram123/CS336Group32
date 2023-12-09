@@ -66,6 +66,31 @@
     	<label for="isFlexible">Flexible Dates:</label>
     	<input type="checkbox" id="isFlexible" name="isFlexible">
 
+        <!-- Checkbox for sorting options -->
+        <label for="sortEconomy">Sort by Economy Price:</label>
+        <input type="checkbox" id="sortEconomy" name="sortEconomy">
+
+        <label for="sortBusiness">Sort by Business Price:</label>
+        <input type="checkbox" id="sortBusiness" name="sortBusiness">
+
+        <label for="sortFirstClass">Sort by First Class Price:</label>
+        <input type="checkbox" id="sortFirstClass" name="sortFirstClass">
+        
+        <label for="sortDuration">Sort by Duration:</label>
+		<input type="checkbox" id="sortDuration" name="sortDuration">
+		
+		<label for="sortTakeoffTime">Sort by Takeoff Time:</label>
+		<input type="checkbox" id="sortTakeoffTime" name="sortTakeoffTime">
+		
+		<label for="sortLandingTime">Sort by Landing Time:</label>
+		<input type="checkbox" id="sortLandingTime" name="sortLandingTime">
+
+        <label for="sortOrder">Sort Order:</label>
+        <select id="sortOrder" name="sortOrder">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+
         <button type="submit">Search</button>
     </form>
 
@@ -86,6 +111,7 @@
             <th>Airline</th>
             <th>Number of Stops</th>
             <th>Flight Type</th>
+            <th>Duration</th>
             <!-- Add more header columns as needed -->
         </tr>
 
@@ -96,6 +122,10 @@
             String departureDate = request.getParameter("departureDate");
             String returnDate = request.getParameter("returnDate");
             boolean isFlexible = "on".equals(request.getParameter("isFlexible"));
+            boolean sortEconomy = "on".equals(request.getParameter("sortEconomy"));
+            boolean sortBusiness = "on".equals(request.getParameter("sortBusiness"));
+            boolean sortFirstClass = "on".equals(request.getParameter("sortFirstClass"));
+            String sortOrder = request.getParameter("sortOrder");
             
             PreparedStatement preparedStatement = null; // Declare preparedStatement
 
@@ -103,27 +133,42 @@
                 ApplicationDB db = new ApplicationDB();
                 Connection connection = db.getConnection();
 
-             // Update the SQL query to handle round trip and date filtering
+                // Update the SQL query to handle round trip, date filtering, and sorting
                 String query = ""; // Declare the query variable
 
                 if (roundTrip) {
                     // Round trip search: check departure and arrival airports for both outbound and return
                     query = "SELECT * FROM flightservices WHERE " +
-				            "((origin_airport = ? AND destination_airport = ?) OR (origin_airport = ? AND destination_airport = ?)) ";
-				
-				    if (isFlexible) {
-				        query += "AND (departure_date BETWEEN ? AND DATE_ADD(?, INTERVAL 3 DAY)) ";
-				    } else {
-				        query += "AND (departure_date = ? OR departure_date = ?) ";
-				    }
-    				preparedStatement = connection.prepareStatement(query);
+                            "((origin_airport = ? AND destination_airport = ?) OR (origin_airport = ? AND destination_airport = ?)) ";
+
+                    if (isFlexible) {
+                        query += "AND (departure_date BETWEEN ? AND DATE_ADD(?, INTERVAL 3 DAY)) ";
+                    } else {
+                        query += "AND (departure_date = ? OR departure_date = ?) ";
+                    }
+
+                    if (sortEconomy) {
+                        query += "ORDER BY economy_fare " + sortOrder;
+                    } else if (sortBusiness) {
+                        query += "ORDER BY business_fare " + sortOrder;
+                    } else if (sortFirstClass) {
+                        query += "ORDER BY first_class_fare " + sortOrder;
+                    } else if (request.getParameter("sortDuration") != null) {
+                        query += "ORDER BY duration " + sortOrder;
+                    } else if (request.getParameter("sortTakeoffTime") != null) {
+                        query += "ORDER BY departure_times " + sortOrder;
+                    } else if (request.getParameter("sortLandingTime") != null) {
+                        query += "ORDER BY arrival_times " + sortOrder;
+                    }
+
+                    preparedStatement = connection.prepareStatement(query);
                     preparedStatement.setString(1, startAirport);
                     preparedStatement.setString(2, endAirport);
                     preparedStatement.setString(3, endAirport); // Flip the airports for the return leg
                     preparedStatement.setString(4, startAirport); // Flip the airports for the return leg
                     if (isFlexible) {
-                    	if (departureDate != null && !departureDate.isEmpty()) {
-                    		preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
+                        if (departureDate != null && !departureDate.isEmpty()) {
+                            preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
                             preparedStatement.setDate(6, java.sql.Date.valueOf(departureDate));
                         } else {
                             // Handle the case where departureDate is not valid
@@ -131,51 +176,64 @@
                         }
                         
                     } else {
-                    	if (departureDate != null && !departureDate.isEmpty()) {
-                    		preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
+                        if (departureDate != null && !departureDate.isEmpty()) {
+                            preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
                             preparedStatement.setDate(6, java.sql.Date.valueOf(returnDate));
                         } else {
                             // Handle the case where departureDate is not valid
                             // You might want to set a default date or handle it in another way
                         }
-                        
                     }
                 } else {
                     // One-way search: check only departure airport
-                    // One-way search: check only departure airport
-			        query = "SELECT * FROM flightservices WHERE origin_airport = ? AND destination_airport = ? ";
-			
-			        if (isFlexible) {
-			            query += "AND (departure_date BETWEEN ? AND DATE_ADD(?, INTERVAL 3 DAY)) ";
-			        } else {
-			            query += "AND (departure_date = ?) ";
-			        }
-			
-			        preparedStatement = connection.prepareStatement(query);
-			        preparedStatement.setString(1, startAirport);
-			        preparedStatement.setString(2, endAirport);
-			
-			        if (isFlexible) {
-			            if (departureDate != null && !departureDate.isEmpty()) {
-			                preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
-			                preparedStatement.setDate(4, java.sql.Date.valueOf(departureDate));
-			            } else {
-			                // Handle the case where departureDate is not valid
-			                // You might want to set a default date or handle it in another way
-			            }
-			        } else {
-			            if (departureDate != null && !departureDate.isEmpty()) {
-			                preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
-			            } else {
-			                // Handle the case where departureDate is not valid
-			                // You might want to set a default date or handle it in another way
-			            }
-			        }
+                    query = "SELECT * FROM flightservices WHERE origin_airport = ? AND destination_airport = ? ";
+
+                    if (isFlexible) {
+                        query += "AND (departure_date BETWEEN ? AND DATE_ADD(?, INTERVAL 3 DAY)) ";
+                    } else {
+                        query += "AND (departure_date = ?) ";
+                    }
+
+                    if (sortEconomy) {
+                        query += "ORDER BY economy_fare " + sortOrder;
+                    } else if (sortBusiness) {
+                        query += "ORDER BY business_fare " + sortOrder;
+                    } else if (sortFirstClass) {
+                        query += "ORDER BY first_class_fare " + sortOrder;
+                    } else if (request.getParameter("sortDuration") != null) {
+                        query += "ORDER BY duration " + sortOrder;
+                    } else if (request.getParameter("sortTakeoffTime") != null) {
+                        query += "ORDER BY departure_times " + sortOrder;
+                    } else if (request.getParameter("sortLandingTime") != null) {
+                        query += "ORDER BY arrival_times " + sortOrder;
+                    }
+
+
+                    preparedStatement = connection.prepareStatement(query);
+                    preparedStatement.setString(1, startAirport);
+                    preparedStatement.setString(2, endAirport);
+                    if (isFlexible) {
+                        if (departureDate != null && !departureDate.isEmpty()) {
+                            preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
+                            preparedStatement.setDate(4, java.sql.Date.valueOf(departureDate));
+                        } else {
+                            // Handle the case where departureDate is not valid
+                            // You might want to set a default date or handle it in another way
+                        }
+                    } else {
+                        if (departureDate != null && !departureDate.isEmpty()) {
+                            preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
+                        } else {
+                            // Handle the case where departureDate is not valid
+                            // You might want to set a default date or handle it in another way
+                        }
+                    }
                 }
+
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
-            %>
+        %>
                     <tr>
                         <td><%= rs.getString("flightNumber") %></td>
                         <td><%= rs.getString("AircraftID") %></td>
@@ -191,9 +249,10 @@
                         <td><%= rs.getString("airline") %></td>
                         <td><%= rs.getInt("number_of_stops") %></td>
                         <td><%= rs.getString("flight_type") %></td>
+                        <td><%= rs.getString("duration") %></td>
                         <!-- Add more data columns as needed -->
                     </tr>
-            <%
+        <%
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
