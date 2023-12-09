@@ -90,6 +90,23 @@
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
         </select>
+        
+        <label for="numStops">Number of Stops:</label>
+    	<input type="text" id="numStops" name="numStops">
+    	
+    	<label for="airline">Enter Airline:</label>
+    	<input type="text" id="airline" name="airline" placeholder="Enter airline code (e.g., AA)">
+    	
+    	<label for="takeoffTime">Takeoff Time (24-hour format):</label>
+		<input type="time" id="takeoffTime" name="takeoffTime">
+		
+		<label for="landingTime">Landing Time (24-hour format):</label>
+		<input type="time" id="landingTime" name="landingTime">
+    	
+    	<label for="maxFare">Maximum Fare:</label>
+		<input type="text" id="maxFare" name="maxFare">
+    	
+
 
         <button type="submit">Search</button>
     </form>
@@ -146,7 +163,25 @@
                     } else {
                         query += "AND (departure_date = ? OR departure_date = ?) ";
                     }
+                    int parameterIndex = 7;
 
+                    if (request.getParameter("numStops") != null && !request.getParameter("numStops").isEmpty()) {
+                        query += "AND number_of_stops = ? ";
+                        
+                    }
+                    if (request.getParameter("airline") != null && !request.getParameter("airline").isEmpty()) {
+                        query += "AND airline = ? ";
+                        
+                    }
+                    if (request.getParameter("maxFare") != null && !request.getParameter("maxFare").isEmpty()) {
+                        query += "AND (economy_fare <= ? OR business_fare <= ? OR first_class_fare <= ?) ";
+                    }
+                    if (request.getParameter("takeoffTime") != null && !request.getParameter("takeoffTime").isEmpty()) {
+                        query += "AND departure_times >= ? ";
+                    }
+                    if (request.getParameter("landingTime") != null && !request.getParameter("landingTime").isEmpty()) {
+                        query += "AND arrival_times <= ? ";
+                    }
                     if (sortEconomy) {
                         query += "ORDER BY economy_fare " + sortOrder;
                     } else if (sortBusiness) {
@@ -184,6 +219,26 @@
                             // You might want to set a default date or handle it in another way
                         }
                     }
+                    if (request.getParameter("numStops") != null && !request.getParameter("numStops").isEmpty()) {
+                        preparedStatement.setInt(parameterIndex, Integer.parseInt(request.getParameter("numStops")));
+                        parameterIndex++;
+                    }
+                    if (request.getParameter("airline") != null && !request.getParameter("airline").isEmpty()) {
+                        preparedStatement.setString(parameterIndex, request.getParameter("airline"));
+                        parameterIndex++;
+                    }
+                    if (request.getParameter("maxFare") != null && !request.getParameter("maxFare").isEmpty()) {
+                        float maxFare = Float.parseFloat(request.getParameter("maxFare"));
+                        preparedStatement.setFloat(parameterIndex++, maxFare);
+                        preparedStatement.setFloat(parameterIndex++, maxFare);
+                        preparedStatement.setFloat(parameterIndex++, maxFare);
+                    }
+                    if (request.getParameter("takeoffTime") != null && !request.getParameter("takeoffTime").isEmpty()) {
+                        preparedStatement.setString(parameterIndex++, request.getParameter("takeoffTime"));
+                    }
+                    if (request.getParameter("landingTime") != null && !request.getParameter("landingTime").isEmpty()) {
+                        preparedStatement.setString(parameterIndex++, request.getParameter("landingTime"));
+                    }
                 } else {
                     // One-way search: check only departure airport
                     query = "SELECT * FROM flightservices WHERE origin_airport = ? AND destination_airport = ? ";
@@ -192,6 +247,22 @@
                         query += "AND (departure_date BETWEEN ? AND DATE_ADD(?, INTERVAL 3 DAY)) ";
                     } else {
                         query += "AND (departure_date = ?) ";
+                    }
+                    int parameterIndex = 4;
+                    if (request.getParameter("numStops") != null && !request.getParameter("numStops").isEmpty()) {
+                        query += "AND number_of_stops = ? ";
+                    }
+                    if (request.getParameter("airline") != null && !request.getParameter("airline").isEmpty()) {
+                        query += "AND airline = ? ";
+                    }
+                    if (request.getParameter("maxFare") != null && !request.getParameter("maxFare").isEmpty()) {
+                        query += "AND (economy_fare <= ? OR business_fare <= ? OR first_class_fare <= ?) ";
+                    }
+                    if (request.getParameter("takeoffTime") != null && !request.getParameter("takeoffTime").isEmpty()) {
+                        query += "AND departure_times >= ? ";
+                    }
+                    if (request.getParameter("landingTime") != null && !request.getParameter("landingTime").isEmpty()) {
+                        query += "AND arrival_times <= ? ";
                     }
 
                     if (sortEconomy) {
@@ -216,6 +287,7 @@
                         if (departureDate != null && !departureDate.isEmpty()) {
                             preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
                             preparedStatement.setDate(4, java.sql.Date.valueOf(departureDate));
+                            parameterIndex++;
                         } else {
                             // Handle the case where departureDate is not valid
                             // You might want to set a default date or handle it in another way
@@ -227,6 +299,26 @@
                             // Handle the case where departureDate is not valid
                             // You might want to set a default date or handle it in another way
                         }
+                    }
+                    if (request.getParameter("numStops") != null && !request.getParameter("numStops").isEmpty()) {
+                        preparedStatement.setInt(parameterIndex, Integer.parseInt(request.getParameter("numStops")));
+                        parameterIndex++;
+                    }
+                    if (request.getParameter("airline") != null && !request.getParameter("airline").isEmpty()) {
+                        preparedStatement.setString(parameterIndex, request.getParameter("airline"));
+                        parameterIndex++;
+                    }
+                    if (request.getParameter("maxFare") != null && !request.getParameter("maxFare").isEmpty()) {
+                        float maxFare = Float.parseFloat(request.getParameter("maxFare"));
+                        preparedStatement.setFloat(parameterIndex++, maxFare);
+                        preparedStatement.setFloat(parameterIndex++, maxFare);
+                        preparedStatement.setFloat(parameterIndex++, maxFare);
+                    }
+                    if (request.getParameter("takeoffTime") != null && !request.getParameter("takeoffTime").isEmpty()) {
+                        preparedStatement.setString(parameterIndex++, request.getParameter("takeoffTime"));
+                    }
+                    if (request.getParameter("landingTime") != null && !request.getParameter("landingTime").isEmpty()) {
+                        preparedStatement.setString(parameterIndex++, request.getParameter("landingTime"));
                     }
                 }
 
