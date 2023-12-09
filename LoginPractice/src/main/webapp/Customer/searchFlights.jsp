@@ -69,75 +69,105 @@
     <table>
         <tr>
             <th>Flight Number</th>
-        <th>Aircraft ID</th>
-        <th>Origin Airport</th>
-        <th>Destination Airport</th>
-        <th>Departure Date</th>
-        <th>Departure Time</th>
-        <th>Arrival Date</th>
-        <th>Arrival Time</th>
-        <th>Economy Fare</th>
-        <th>Business Fare</th>
-        <th>First Class Fare</th>
-        <th>Airline</th>
-        <th>Number of Stops</th>
-        <th>Flight Type</th>
+            <th>Aircraft ID</th>
+            <th>Origin Airport</th>
+            <th>Destination Airport</th>
+            <th>Departure Date</th>
+            <th>Departure Time</th>
+            <th>Arrival Date</th>
+            <th>Arrival Time</th>
+            <th>Economy Fare</th>
+            <th>Business Fare</th>
+            <th>First Class Fare</th>
+            <th>Airline</th>
+            <th>Number of Stops</th>
+            <th>Flight Type</th>
             <!-- Add more header columns as needed -->
         </tr>
 
         <%
             String startAirport = request.getParameter("startAirport");
             String endAirport = request.getParameter("endAirport");
-            String roundTrip = request.getParameter("roundTripCheckbox");
+            boolean roundTrip = "on".equals(request.getParameter("roundTripCheckbox"));
             String departureDate = request.getParameter("departureDate");
             String returnDate = request.getParameter("returnDate");
+            
+            PreparedStatement preparedStatement = null; // Declare preparedStatement
 
             try {
                 ApplicationDB db = new ApplicationDB();
                 Connection connection = db.getConnection();
 
-                // Update the SQL query to handle round trip and date filtering
-                String query = "SELECT * FROM flightservices WHERE origin_airport = ? AND destination_airport = ? AND departure_date >= ?";
-                if ("on".equals(roundTrip)) {
-                    query += " AND ((arrival_date <= ?) OR (departure_date <= ?))";
+             // Update the SQL query to handle round trip and date filtering
+                String query = ""; // Declare the query variable
+
+                if (roundTrip) {
+                    // Round trip search: check departure and arrival airports for both outbound and return
+                    query = "SELECT * FROM flightservices WHERE ((origin_airport = ? AND destination_airport = ?) OR (origin_airport = ? AND destination_airport = ?)) AND (departure_date >= ? OR departure_date >= ?)";
+                    preparedStatement = connection.prepareStatement(query);
+                    preparedStatement.setString(1, startAirport);
+                    preparedStatement.setString(2, endAirport);
+                    preparedStatement.setString(3, endAirport); // Flip the airports for the return leg
+                    preparedStatement.setString(4, startAirport); // Flip the airports for the return leg
+
+                    // Check if departureDate is valid
+                    if (departureDate != null && !departureDate.isEmpty()) {
+                        preparedStatement.setDate(5, java.sql.Date.valueOf(departureDate));
+                    } else {
+                        // Handle the case where departureDate is not valid
+                        // You might want to set a default date or handle it in another way
+                    }
+
+                    preparedStatement.setDate(6, java.sql.Date.valueOf(returnDate));
+                } else {
+                    // One-way search: check only departure airport
+                    query = "SELECT * FROM flightservices WHERE origin_airport = ? AND destination_airport = ? AND departure_date = ?";
+                    preparedStatement = connection.prepareStatement(query);
+                    preparedStatement.setString(1, startAirport);
+                    preparedStatement.setString(2, endAirport);
+
+                    // Check if departureDate is valid
+                    if (departureDate != null && !departureDate.isEmpty()) {
+                        preparedStatement.setDate(3, java.sql.Date.valueOf(departureDate));
+                    } else {
+                        // Handle the case where departureDate is not valid
+                        // You might want to set a default date or handle it in another way
+                    }
                 }
-
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
-                preparedStatement.setString(1, startAirport);
-                preparedStatement.setString(2, endAirport);
-                preparedStatement.setString(3, departureDate);
-
-                // Set parameters for round trip and return date if applicable
-                if ("on".equals(roundTrip)) {
-                    preparedStatement.setString(4, returnDate);
-                    preparedStatement.setString(5, returnDate);
-                }
-
                 ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
-        %>
+            %>
                     <tr>
                         <td><%= rs.getString("flightNumber") %></td>
-                    <td><%= rs.getString("AircraftID") %></td>
-                    <td><%= rs.getString("origin_airport") %></td>
-                    <td><%= rs.getString("destination_airport") %></td>
-                    <td><%= rs.getString("departure_date") %></td>
-                    <td><%= rs.getString("departure_times") %></td>
-                    <td><%= rs.getString("arrival_date") %></td>
-                    <td><%= rs.getString("arrival_times") %></td>
-                    <td><%= rs.getFloat("economy_fare") %></td>
-                    <td><%= rs.getFloat("business_fare") %></td>
-                    <td><%= rs.getFloat("first_class_fare") %></td>
-                    <td><%= rs.getString("airline") %></td>
-                    <td><%= rs.getInt("number_of_stops") %></td>
-                    <td><%= rs.getString("flight_type") %></td>
+                        <td><%= rs.getString("AircraftID") %></td>
+                        <td><%= rs.getString("origin_airport") %></td>
+                        <td><%= rs.getString("destination_airport") %></td>
+                        <td><%= rs.getString("departure_date") %></td>
+                        <td><%= rs.getString("departure_times") %></td>
+                        <td><%= rs.getString("arrival_date") %></td>
+                        <td><%= rs.getString("arrival_times") %></td>
+                        <td><%= rs.getFloat("economy_fare") %></td>
+                        <td><%= rs.getFloat("business_fare") %></td>
+                        <td><%= rs.getFloat("first_class_fare") %></td>
+                        <td><%= rs.getString("airline") %></td>
+                        <td><%= rs.getInt("number_of_stops") %></td>
+                        <td><%= rs.getString("flight_type") %></td>
                         <!-- Add more data columns as needed -->
                     </tr>
-        <%
+            <%
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                // Close the preparedStatement in the finally block
+                if (preparedStatement != null) {
+                    try {
+                        preparedStatement.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         %>
     </table>

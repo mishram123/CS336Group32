@@ -8,6 +8,8 @@
     <title>Flight Search</title>
 </head>
 <body>
+		<button onclick="location.href='CustomerRepMainPage.jsp'"style="background-color: #007BFF; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Back to Rep Main Page</button>
+        <button onclick="location.href='../Logout.jsp'" style="background-color: #007BFF; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Log out</button>
     <h1>Search Flights for an Airport</h1>
     <form method="post">
         <label for="airportCode">Enter Airport Code:</label>
@@ -29,9 +31,11 @@
                 
 
                 // Query for Departing Flights
-                String queryDeparting = "SELECT * FROM flightservices fs JOIN departurearrival da ON fs.flightNumber = da.flightNumber WHERE da.DepartureThreeLetterID = ?";
-                pstmt = con.prepareStatement(queryDeparting);
-                pstmt.setString(1, airportCode);
+               	String queryDeparting = "SELECT * FROM FlightServices WHERE origin_airport = ? OR destination_airport = ?";
+				pstmt = con.prepareStatement(queryDeparting);
+				pstmt.setString(1, airportCode);
+				pstmt.setString(2, airportCode);
+
 
                 // Executing Departing Flights Query
                 out.println("<h2>Departing Flights:</h2>");

@@ -81,7 +81,7 @@
             <h2>Reporting & Lists</h2>
             <ul>
                 <li><a href="waitingList.jsp">Passengers on Waiting List</a></li>
-                <li><a href="flightsByAirport.jsp">Flights by Airport</a></li>
+                <li><a href="CustomerRepFlightsList.jsp">Flights by Airport</a></li>
             </ul>
         </div>
         
