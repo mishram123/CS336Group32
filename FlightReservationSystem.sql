@@ -738,3 +738,47 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-12-09  0:48:30
+
+
+--added flightHistory: 
+
+use flightreservationsystem;
+
+-- CREATE TABLE `flightHistory` (
+--   `historyID` INT NOT NULL AUTO_INCREMENT,
+--   `accountID` VARCHAR(20),
+--   `flightNumber` VARCHAR(5),
+--   `departureAirport` VARCHAR(3),
+--   `arrivalAirport` VARCHAR(3),
+--   `departureDate` DATE,
+--   `arrivalDate` DATE,
+--   `departureTime` TIME,
+--   `arrivalTime` TIME,
+--   `ticketNumber` VARCHAR(10),
+--   `tripType` ENUM('roundtrip', 'oneway') NOT NULL,
+--   `classType` ENUM('economy', 'business') NOT NULL,
+--   PRIMARY KEY (`historyID`),
+--   FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
+--   FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`),
+--   FOREIGN KEY (`departureAirport`) REFERENCES `airport` (`ThreeLetterID`),
+--   FOREIGN KEY (`arrivalAirport`) REFERENCES `airport` (`ThreeLetterID`),
+--   FOREIGN KEY (`ticketNumber`) REFERENCES `ticket` (`TicketNumber`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE reservations (
+    reservationID INT AUTO_INCREMENT PRIMARY KEY,
+    flightNumber VARCHAR(10),
+    customerID VARCHAR(30),
+    customerName VARCHAR(100),
+    reservationDate DATE,
+    class VARCHAR(20),
+    status VARCHAR(20),
+    seatNumber VARCHAR(10),
+    totalFare DECIMAL(10, 2),
+    bookingDate DATETIME,
+    FOREIGN KEY (flightNumber) REFERENCES flightservices(flightNumber),
+    FOREIGN KEY (customerID) REFERENCES customer(UserID)
+);
+
+
