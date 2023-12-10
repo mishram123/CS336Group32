@@ -111,16 +111,18 @@
         <label for="departureDate">Departure Date:</label>
         <input type="date" id="departureDate" name="departureDate" required>
 
-        <label for="departureTimes">Departure Times:</label>
-        <input type="time" id="departureTimes" name="departureTimes" required>
+        <label for="departureTimes">Departure Times (HH:mm:ss):</label>
+		<input type="text" id="departureTimes" name="departureTimes" pattern="(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d" required title="Enter a valid time in the format HH:mm:ss">
 
         <label for="arrivalDate">Arrival Date:</label>
         <input type="date" id="arrivalDate" name="arrivalDate" required>
 
-        <label for="arrivalTimes">Arrival Times:</label>
-        <input type="time" id="arrivalTimes" name="arrivalTimes" required>
+        <label for="arrivalTimes">Arrival Times (HH:mm:ss):</label>
+		<input type="text" id="arrivalTimes" name="arrivalTimes" pattern="(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d" required title="Enter a valid time in the format HH:mm:ss">
 
         <button type="submit">Add Flight</button>
+        
+        
     </form>
 </body>
 </html>
