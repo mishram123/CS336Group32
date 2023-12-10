@@ -4,7 +4,7 @@ USE `flightreservationsystem`;
 --
 -- Host: 127.0.0.1    Database: flightreservationsystem
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.35
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -351,7 +351,7 @@ CREATE TABLE `flightservices` (
 
 LOCK TABLES `flightservices` WRITE;
 /*!40000 ALTER TABLE `flightservices` DISABLE KEYS */;
-INSERT INTO `flightservices` VALUES ('F001','A001','JFK','LAX',300,600,1000,'AA',0,'domestic','2023-12-06','12:00:00','2023-12-06','18:00:00','06:00:00'),('F002','A010','LAX','JFK',200,400,1100,'AA',1,'domestic','2023-12-08','08:00:00','2023-12-08','18:00:00','10:00:00');
+INSERT INTO `flightservices` VALUES ('F001','A001','JFK','LAX',300,600,1000,'AA',0,'domestic','2023-12-06','12:00:00','2023-12-06','18:00:00','06:00:00'),('F002','A010','LAX','JFK',200,400,1100,'AA',1,'domestic','2023-12-08','08:00:00','2023-12-08','18:00:00','10:00:00'),('F003','A003','JFK','AMS',500,900,1500,'BA',1,'international','2023-12-12','07:00:00','2023-12-12','14:00:00','02:00:00');
 /*!40000 ALTER TABLE `flightservices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -611,6 +611,7 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
+INSERT INTO `ticket` VALUES ('G42','A9',300,100,'2023-12-09 00:00:00','Kar','Karthik','Gangireddy','economy',1,50),('G654','A22',900,100,'2023-12-09 00:00:00','Karth','Karthik','Gangireddy','business',0,0);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -645,6 +646,7 @@ CREATE TABLE `ticketflightassociatedwith` (
 
 LOCK TABLES `ticketflightassociatedwith` WRITE;
 /*!40000 ALTER TABLE `ticketflightassociatedwith` DISABLE KEYS */;
+INSERT INTO `ticketflightassociatedwith` VALUES ('G42','F001','JFK','LAX','2023-12-06','12:00:00'),('G654','F003','JFK','AMS','2023-12-12','07:00:00');
 /*!40000 ALTER TABLE `ticketflightassociatedwith` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -737,4 +739,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-09  0:48:30
+-- Dump completed on 2023-12-09 21:45:39
