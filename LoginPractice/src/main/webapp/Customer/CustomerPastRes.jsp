@@ -20,6 +20,10 @@
     </style>
 </head>
 <body>
+
+	<button onclick="location.href='CustomerMainPage.jsp'" style="background-color: #007BFF; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Back to Customer Main Page</button>
+    <button onclick="location.href='../Logout.jsp'" style="background-color: #007BFF; color: #fff; padding: 10px; border: none; border-radius: 4px; cursor: pointer;">Log out</button>
+    
     <h1>Past Flight Reservations</h1>
     <form action="../Logout.jsp" method="post" style="position: absolute; top: 10px; left: 10px;">
             <input type="submit" value="Logout" class="logout-button"/>

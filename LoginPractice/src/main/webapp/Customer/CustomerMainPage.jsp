@@ -1,6 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,49 +18,38 @@
         .container {
             display: flex;
             justify-content: space-between;
+            align-items: center; /* Center vertically */
             padding: 20px;
         }
         .airplane-logo {
             max-width: 300px;
-            position: absolute;
-            left: 20px;
-            top: 120px;
         }
-        .search-section {
+        .search-section,
+        .faq-section {
             width: 200px;
-            margin-left: auto;
             padding: 10px;
             background: #fff;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-align: center; /* Center text */
         }
-        .search-button {
-            display: block;
-            margin: 20px 0;
-            padding: 10px;
-            background-color: #4caf50;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .faq-section {
-            margin-left: 20px; /* Adjust the margin as needed */
-        }
+        .search-button,
         .faq-button {
             display: block;
-            margin: 20px 0;
+            margin: 5px 0;
             padding: 10px;
-            background-color: #337ab7; /* Choose a color that fits your design */
-            color: white;
-            text-align: center;
-            text-decoration: none;
             border-radius: 5px;
+            text-decoration: none;
+            color: white;
+        }
+        .search-button {
+            background-color: #4caf50;
+        }
+        .faq-button {
+            background-color: #337ab7;
         }
         .reservations {
-            position: absolute;
-            left: 20px;
-            bottom: 20px;
+            /* Removed absolute positioning */
             background: #fff;
             padding: 10px;
             border-radius: 5px;
@@ -96,30 +82,35 @@
 
     <div class="container">
         <img src="../airplane_logo.jpg" alt="Airplane Logo" class="airplane-logo">
-        <div class="search-section">
-            <a href="searchFlights.jsp" class="search-button">Search Flights</a>
-        </div>
-
-        <!-- Add FAQ button here -->
+        
+        <!-- Move the FAQ button to the right side of the container -->
         <div class="faq-section">
             <a href="faq.jsp" class="faq-button">FAQ</a>
+        </div>
+
+        <div class="search-section">
+            <a href="searchFlights.jsp" class="search-button">Search Flights</a>
         </div>
     </div>
 
     <div class="reservations">
         <div>
+            <h3>Book Reservations</h3>
+            <div class="search-section">
+                <a href="CustomerBookRes.jsp" class="search-button">Book a Reservation</a>
+            </div>
+        </div>
+        <div>
             <h3>Past Reservations</h3>
-            <ul>
-                <li>Flight ABC123</li>
-                <li>Flight DEF456</li>
-            </ul>
+            <div class="search-section">
+                <a href="CustomerPastRes.jsp" class="search-button">View Past Reservations</a>
+            </div>
         </div>
         <div>
             <h3>Upcoming Tickets</h3>
-            <ul>
-                <li>Flight GHI789</li>
-                <li>Flight JKL012</li>
-            </ul>
+            <div class="search-section">
+                <a href="CustomerFutureRes.jsp" class="search-button">View Upcoming Reservations</a>
+            </div>
         </div>
     </div>
 </body>
