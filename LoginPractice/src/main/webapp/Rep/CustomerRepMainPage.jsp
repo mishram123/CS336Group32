@@ -58,8 +58,8 @@
         <div class="functionality-block">
             <h2>Reservation Management</h2>
             <ul>
-                <li><a href="makeReservation.jsp">Make Flight Reservation</a></li>
-                <li><a href="editReservation.jsp">Edit Flight Reservation</a></li>
+                <li><a href="makeCustomerReservation.jsp">Make Flight Reservation</a></li>
+                <li><a href="editCustomerReservation.jsp">Edit Flight Reservation</a></li>
                 <li><a href="replytofaq.jsp">Reply to User Questions</a></li>
             </ul>
         </div>
