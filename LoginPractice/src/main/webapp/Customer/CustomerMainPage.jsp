@@ -101,6 +101,11 @@
             </div>
         </div>
         <div>
+            <h3>Cancel Reservations</h3>
+            <div class="search-section">
+            <a href="CustomerCancelRes.jsp" class="search-button">Cancel a Reservation</a>
+        </div>
+        <div>
             <h3>Past Reservations</h3>
             <div class="search-section">
                 <a href="CustomerPastRes.jsp" class="search-button">View Past Reservations</a>
