@@ -43,6 +43,73 @@ INSERT INTO `account` VALUES ('Customer1','CustomerPassword',NULL),('Customer12'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `adminticket`
+--
+
+DROP TABLE IF EXISTS `adminticket`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `adminticket` (
+  `TicketNumber` varchar(10) NOT NULL,
+  `seatNumber` varchar(3) DEFAULT NULL,
+  `total_fare` float DEFAULT NULL,
+  `bookingFee` float DEFAULT NULL,
+  `purchaseDateTime` datetime DEFAULT NULL,
+  `Passenger_Name` varchar(50) DEFAULT NULL,
+  `first_name` varchar(25) DEFAULT NULL,
+  `last_name` varchar(25) DEFAULT NULL,
+  `class` varchar(10) DEFAULT NULL,
+  `isEconomy` tinyint(1) DEFAULT NULL,
+  `changeCancelFee` float DEFAULT NULL,
+  PRIMARY KEY (`TicketNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `adminticket`
+--
+
+LOCK TABLES `adminticket` WRITE;
+/*!40000 ALTER TABLE `adminticket` DISABLE KEYS */;
+INSERT INTO `adminticket` VALUES ('T1010',NULL,300,NULL,'2023-01-01 10:00:00','John Doe',NULL,NULL,'Economy',NULL,NULL),('T1011',NULL,300,NULL,'2023-01-02 10:00:00','Jane Doe',NULL,NULL,'Economy',NULL,NULL),('T1012',NULL,300,NULL,'2023-01-03 10:00:00','Jim Beam',NULL,NULL,'Economy',NULL,NULL),('T1013',NULL,300,NULL,'2023-01-04 10:00:00','Jill Hill',NULL,NULL,'Economy',NULL,NULL),('T1014',NULL,300,NULL,'2023-01-05 10:00:00','Jack Black',NULL,NULL,'Economy',NULL,NULL),('T1015',NULL,350,NULL,'2023-01-06 10:00:00','Sam Smith',NULL,NULL,'Economy',NULL,NULL),('T1016',NULL,350,NULL,'2023-01-07 10:00:00','Sara Stone',NULL,NULL,'Economy',NULL,NULL),('T1017',NULL,350,NULL,'2023-01-08 10:00:00','Sue Sand',NULL,NULL,'Economy',NULL,NULL),('T1018',NULL,320,NULL,'2023-01-09 10:00:00','Mike Mountain',NULL,NULL,'Economy',NULL,NULL),('T1019',NULL,320,NULL,'2023-01-10 10:00:00','Molly Mole',NULL,NULL,'Economy',NULL,NULL),('T1020',NULL,320,NULL,'2023-01-11 10:00:00','Marge Major',NULL,NULL,'Economy',NULL,NULL),('T1021',NULL,320,NULL,'2023-01-12 10:00:00','Matt Minor',NULL,NULL,'Economy',NULL,NULL),('T1022',NULL,320,NULL,'2023-01-13 10:00:00','Martha Mars',NULL,NULL,'Economy',NULL,NULL),('T1023',NULL,320,NULL,'2023-01-14 10:00:00','Martin Moon',NULL,NULL,'Economy',NULL,NULL),('T1024',NULL,320,NULL,'2023-01-15 10:00:00','Megan Meteor',NULL,NULL,'Economy',NULL,NULL);
+/*!40000 ALTER TABLE `adminticket` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `adminticketflightassociatedwith`
+--
+
+DROP TABLE IF EXISTS `adminticketflightassociatedwith`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `adminticketflightassociatedwith` (
+  `TicketNumber` varchar(10) NOT NULL,
+  `flightNumber` varchar(5) NOT NULL,
+  `fromAirport` varchar(3) DEFAULT NULL,
+  `toAirport` varchar(3) DEFAULT NULL,
+  `departureDate` date DEFAULT NULL,
+  `departureTime` time DEFAULT NULL,
+  PRIMARY KEY (`TicketNumber`,`flightNumber`),
+  KEY `flightNumber` (`flightNumber`),
+  KEY `fromAirport` (`fromAirport`),
+  KEY `toAirport` (`toAirport`),
+  CONSTRAINT `adminticketflightassociatedwith_ibfk_1` FOREIGN KEY (`TicketNumber`) REFERENCES `ticket` (`TicketNumber`),
+  CONSTRAINT `adminticketflightassociatedwith_ibfk_2` FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`),
+  CONSTRAINT `adminticketflightassociatedwith_ibfk_3` FOREIGN KEY (`fromAirport`) REFERENCES `airport` (`ThreeLetterID`),
+  CONSTRAINT `adminticketflightassociatedwith_ibfk_4` FOREIGN KEY (`toAirport`) REFERENCES `airport` (`ThreeLetterID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `adminticketflightassociatedwith`
+--
+
+LOCK TABLES `adminticketflightassociatedwith` WRITE;
+/*!40000 ALTER TABLE `adminticketflightassociatedwith` DISABLE KEYS */;
+/*!40000 ALTER TABLE `adminticketflightassociatedwith` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `aircraft`
 --
 
@@ -339,6 +406,7 @@ CREATE TABLE `flightservices` (
   `arrival_date` date DEFAULT NULL,
   `arrival_times` time DEFAULT NULL,
   `duration` time DEFAULT NULL,
+  `is_full` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`flightNumber`),
   KEY `AircraftID` (`AircraftID`),
   CONSTRAINT `flightservices_ibfk_1` FOREIGN KEY (`AircraftID`) REFERENCES `aircraft` (`AircraftID`)
@@ -351,7 +419,7 @@ CREATE TABLE `flightservices` (
 
 LOCK TABLES `flightservices` WRITE;
 /*!40000 ALTER TABLE `flightservices` DISABLE KEYS */;
-INSERT INTO `flightservices` VALUES ('F001','A001','JFK','LAX',300,600,1000,'AA',0,'domestic','2023-12-06','12:00:00','2023-12-06','18:00:00','06:00:00'),('F002','A010','LAX','JFK',200,400,1100,'AA',1,'domestic','2023-12-08','08:00:00','2023-12-08','18:00:00','10:00:00'),('F003','A003','JFK','AMS',500,900,1500,'BA',1,'international','2023-12-12','07:00:00','2023-12-12','14:00:00','02:00:00');
+INSERT INTO `flightservices` VALUES ('F001','A001','JFK','LAX',300,600,1000,'AA',0,'domestic','2023-12-06','12:00:00','2023-12-06','18:00:00','06:00:00',0),('F002','A010','LAX','JFK',200,400,1100,'AA',1,'domestic','2023-12-08','08:00:00','2023-12-08','18:00:00','10:00:00',0),('F003','A003','JFK','AMS',500,900,1500,'BA',1,'international','2023-12-12','07:00:00','2023-12-12','14:00:00','02:00:00',1),('F100','A001','JFK','LAX',250,500,800,'AA',0,'domestic','2023-12-10','15:00:00','2023-12-10','21:00:00','06:00:00',0),('F101','A002','LAX','JFK',260,520,820,'DL',1,'domestic','2023-12-11','16:00:00','2023-12-11','22:00:00','06:00:00',0),('F102','A003','JFK','AMS',300,600,900,'BA',0,'international','2023-12-12','17:00:00','2023-12-13','07:00:00','14:00:00',0);
 /*!40000 ALTER TABLE `flightservices` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -529,6 +597,42 @@ INSERT INTO `owns` VALUES ('AA','A001'),('AF','A002'),('BA','A003'),('DL','A004'
 UNLOCK TABLES;
 
 --
+-- Table structure for table `reservations`
+--
+
+DROP TABLE IF EXISTS `reservations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reservations` (
+  `reservationID` int NOT NULL AUTO_INCREMENT,
+  `flightNumber` varchar(10) DEFAULT NULL,
+  `customerID` varchar(30) DEFAULT NULL,
+  `customerName` varchar(100) DEFAULT NULL,
+  `reservationDate` date DEFAULT NULL,
+  `class` varchar(20) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `seatNumber` varchar(10) DEFAULT NULL,
+  `totalFare` decimal(10,2) DEFAULT NULL,
+  `bookingDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`reservationID`),
+  KEY `flightNumber` (`flightNumber`),
+  KEY `customerID` (`customerID`),
+  CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`),
+  CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`customerID`) REFERENCES `customer` (`UserID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reservations`
+--
+
+LOCK TABLES `reservations` WRITE;
+/*!40000 ALTER TABLE `reservations` DISABLE KEYS */;
+INSERT INTO `reservations` VALUES (1,'F001','Customer1','John Doe','2023-12-15','Economy','Confirmed','12A',300.00,'2023-11-01 10:30:00'),(2,'F001','Customer12','Jane Smith','2023-12-15','Business','Confirmed','1B',600.00,'2023-11-02 11:00:00'),(3,'F002','Customer1','John Doe','2023-12-18','Economy','Cancelled','14C',200.00,'2023-11-05 09:15:00'),(4,'F002','Customer12','Jane Smith','2023-12-18','Business','Confirmed','2D',400.00,'2023-11-06 08:45:00');
+/*!40000 ALTER TABLE `reservations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `roundtripticket`
 --
 
@@ -611,8 +715,41 @@ CREATE TABLE `ticket` (
 
 LOCK TABLES `ticket` WRITE;
 /*!40000 ALTER TABLE `ticket` DISABLE KEYS */;
-INSERT INTO `ticket` VALUES ('G42','A9',300,100,'2023-12-09 00:00:00','Kar','Karthik','Gangireddy','economy',1,50),('G654','A22',900,100,'2023-12-09 00:00:00','Karth','Karthik','Gangireddy','business',0,0);
+INSERT INTO `ticket` VALUES ('G42','A9',300,100,'2023-12-09 00:00:00','Kar','Karthik','Gangireddy','economy',1,50),('G654','A22',900,100,'2023-12-09 00:00:00','Karth','Karthik','Gangireddy','business',0,0),('G97','A12',900,120,'2023-12-11 00:00:00','Karthi','Karthik','Gangireddy','business',0,0);
 /*!40000 ALTER TABLE `ticket` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ticketadmin`
+--
+
+DROP TABLE IF EXISTS `ticketadmin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticketadmin` (
+  `TicketNumber` varchar(10) NOT NULL,
+  `seatNumber` varchar(3) DEFAULT NULL,
+  `total_fare` float DEFAULT NULL,
+  `bookingFee` float DEFAULT NULL,
+  `purchaseDateTime` datetime DEFAULT NULL,
+  `Passenger_Name` varchar(50) DEFAULT NULL,
+  `first_name` varchar(25) DEFAULT NULL,
+  `last_name` varchar(25) DEFAULT NULL,
+  `class` varchar(10) DEFAULT NULL,
+  `isEconomy` tinyint(1) DEFAULT NULL,
+  `changeCancelFee` float DEFAULT NULL,
+  PRIMARY KEY (`TicketNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ticketadmin`
+--
+
+LOCK TABLES `ticketadmin` WRITE;
+/*!40000 ALTER TABLE `ticketadmin` DISABLE KEYS */;
+INSERT INTO `ticketadmin` VALUES ('T1010',NULL,300,NULL,'2023-01-01 10:00:00','John Doe',NULL,NULL,'Economy',NULL,NULL),('T1011',NULL,300,NULL,'2023-01-02 10:00:00','Jane Doe',NULL,NULL,'Economy',NULL,NULL),('T1012',NULL,300,NULL,'2023-01-03 10:00:00','Jim Beam',NULL,NULL,'Economy',NULL,NULL),('T1013',NULL,300,NULL,'2023-01-04 10:00:00','Jill Hill',NULL,NULL,'Economy',NULL,NULL),('T1014',NULL,300,NULL,'2023-01-05 10:00:00','Jack Black',NULL,NULL,'Economy',NULL,NULL),('T1015',NULL,350,NULL,'2023-01-06 10:00:00','Sam Smith',NULL,NULL,'Economy',NULL,NULL),('T1016',NULL,350,NULL,'2023-01-07 10:00:00','Sara Stone',NULL,NULL,'Economy',NULL,NULL),('T1017',NULL,350,NULL,'2023-01-08 10:00:00','Sue Sand',NULL,NULL,'Economy',NULL,NULL),('T1018',NULL,320,NULL,'2023-01-09 10:00:00','Mike Mountain',NULL,NULL,'Economy',NULL,NULL),('T1019',NULL,320,NULL,'2023-01-10 10:00:00','Molly Mole',NULL,NULL,'Economy',NULL,NULL),('T1020',NULL,320,NULL,'2023-01-11 10:00:00','Marge Major',NULL,NULL,'Economy',NULL,NULL),('T1021',NULL,320,NULL,'2023-01-12 10:00:00','Matt Minor',NULL,NULL,'Economy',NULL,NULL),('T1022',NULL,320,NULL,'2023-01-13 10:00:00','Martha Mars',NULL,NULL,'Economy',NULL,NULL),('T1023',NULL,320,NULL,'2023-01-14 10:00:00','Martin Moon',NULL,NULL,'Economy',NULL,NULL),('T1024',NULL,320,NULL,'2023-01-15 10:00:00','Megan Meteor',NULL,NULL,'Economy',NULL,NULL),('T1030',NULL,300,NULL,'2023-02-01 10:00:00','Charlie Chaplin',NULL,NULL,'Economy',NULL,NULL),('T1031',NULL,300,NULL,'2023-02-02 10:00:00','Diana Prince',NULL,NULL,'Economy',NULL,NULL),('T1032',NULL,500,NULL,'2023-02-03 10:00:00','Ethan Hunt',NULL,NULL,'Economy',NULL,NULL),('T1033',NULL,500,NULL,'2023-02-04 10:00:00','Fiona Fantasy',NULL,NULL,'Economy',NULL,NULL);
+/*!40000 ALTER TABLE `ticketadmin` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -651,6 +788,41 @@ INSERT INTO `ticketflightassociatedwith` VALUES ('G42','F001','JFK','LAX','2023-
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ticketflightassociatedwithadmin`
+--
+
+DROP TABLE IF EXISTS `ticketflightassociatedwithadmin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ticketflightassociatedwithadmin` (
+  `TicketNumber` varchar(10) NOT NULL,
+  `flightNumber` varchar(5) NOT NULL,
+  `fromAirport` varchar(3) DEFAULT NULL,
+  `toAirport` varchar(3) DEFAULT NULL,
+  `departureDate` date DEFAULT NULL,
+  `departureTime` time DEFAULT NULL,
+  PRIMARY KEY (`TicketNumber`,`flightNumber`),
+  KEY `flightNumber` (`flightNumber`),
+  KEY `fromAirport` (`fromAirport`),
+  KEY `toAirport` (`toAirport`),
+  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_1` FOREIGN KEY (`TicketNumber`) REFERENCES `ticketadmin` (`TicketNumber`),
+  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_2` FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`),
+  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_3` FOREIGN KEY (`fromAirport`) REFERENCES `airport` (`ThreeLetterID`),
+  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_4` FOREIGN KEY (`toAirport`) REFERENCES `airport` (`ThreeLetterID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ticketflightassociatedwithadmin`
+--
+
+LOCK TABLES `ticketflightassociatedwithadmin` WRITE;
+/*!40000 ALTER TABLE `ticketflightassociatedwithadmin` DISABLE KEYS */;
+INSERT INTO `ticketflightassociatedwithadmin` VALUES ('T1010','F100',NULL,NULL,NULL,NULL),('T1011','F100',NULL,NULL,NULL,NULL),('T1012','F100',NULL,NULL,NULL,NULL),('T1013','F100',NULL,NULL,NULL,NULL),('T1014','F100',NULL,NULL,NULL,NULL),('T1015','F101',NULL,NULL,NULL,NULL),('T1016','F101',NULL,NULL,NULL,NULL),('T1017','F101',NULL,NULL,NULL,NULL),('T1018','F102',NULL,NULL,NULL,NULL),('T1019','F102',NULL,NULL,NULL,NULL),('T1020','F102',NULL,NULL,NULL,NULL),('T1021','F102',NULL,NULL,NULL,NULL),('T1022','F102',NULL,NULL,NULL,NULL),('T1023','F102',NULL,NULL,NULL,NULL),('T1024','F102',NULL,NULL,NULL,NULL),('T1030','F001',NULL,NULL,NULL,NULL),('T1031','F001',NULL,NULL,NULL,NULL),('T1032','F003',NULL,NULL,NULL,NULL),('T1033','F003',NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `ticketflightassociatedwithadmin` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `transaction`
 --
 
@@ -675,6 +847,34 @@ CREATE TABLE `transaction` (
 LOCK TABLES `transaction` WRITE;
 /*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
 /*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transactionadmin`
+--
+
+DROP TABLE IF EXISTS `transactionadmin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transactionadmin` (
+  `accountID` varchar(20) NOT NULL,
+  `TicketNumber` varchar(10) NOT NULL,
+  `seatAvailable` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`accountID`,`TicketNumber`),
+  KEY `TicketNumber` (`TicketNumber`),
+  CONSTRAINT `transactionAdmin_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
+  CONSTRAINT `transactionAdmin_ibfk_2` FOREIGN KEY (`TicketNumber`) REFERENCES `ticketadmin` (`TicketNumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transactionadmin`
+--
+
+LOCK TABLES `transactionadmin` WRITE;
+/*!40000 ALTER TABLE `transactionadmin` DISABLE KEYS */;
+INSERT INTO `transactionadmin` VALUES ('Customer1','T1010',1),('Customer1','T1011',1),('Customer1','T1014',1),('Customer1','T1015',1),('Customer1','T1018',1),('Customer1','T1019',1),('Customer1','T1022',1),('Customer1','T1023',1),('Customer1','T1030',1),('Customer1','T1032',1),('Customer12','T1012',1),('Customer12','T1013',1),('Customer12','T1016',1),('Customer12','T1017',1),('Customer12','T1020',1),('Customer12','T1021',1),('Customer12','T1024',1),('Customer12','T1031',1),('Customer12','T1033',1);
+/*!40000 ALTER TABLE `transactionadmin` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -727,6 +927,7 @@ CREATE TABLE `waitinglist` (
 
 LOCK TABLES `waitinglist` WRITE;
 /*!40000 ALTER TABLE `waitinglist` DISABLE KEYS */;
+INSERT INTO `waitinglist` VALUES ('Customer1','G97',NULL,NULL);
 /*!40000 ALTER TABLE `waitinglist` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -739,205 +940,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-09 21:45:39
-DROP TABLE IF EXISTS `reservations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE reservations (
-    reservationID INT AUTO_INCREMENT PRIMARY KEY,
-    flightNumber VARCHAR(10),
-    customerID VARCHAR(30),
-    customerName VARCHAR(100),
-    reservationDate DATE,
-    class VARCHAR(20),
-    status VARCHAR(20),
-    seatNumber VARCHAR(10),
-    totalFare DECIMAL(10, 2),
-    bookingDate DATETIME,
-    FOREIGN KEY (flightNumber) REFERENCES flightservices(flightNumber),
-    FOREIGN KEY (customerID) REFERENCES customer(UserID)
-);
-
-LOCK TABLES `reservations` WRITE;
-INSERT INTO `reservations` (flightNumber, customerID, customerName, reservationDate, class, status, seatNumber, totalFare, bookingDate) VALUES
-('F001', 'Customer1', 'John Doe', '2023-12-15', 'Economy', 'Confirmed', '12A', 300.00, '2023-11-01 10:30:00'),
-('F001', 'Customer12', 'Jane Smith', '2023-12-15', 'Business', 'Confirmed', '1B', 600.00, '2023-11-02 11:00:00'),
-('F002', 'Customer1', 'John Doe', '2023-12-18', 'Economy', 'Cancelled', '14C', 200.00, '2023-11-05 09:15:00'),
-('F002', 'Customer12', 'Jane Smith', '2023-12-18', 'Business', 'Confirmed', '2D', 400.00, '2023-11-06 08:45:00'); 
-UNLOCK TABLES;
-
-
-LOCK TABLES `flightservices` WRITE;
-
-INSERT INTO `flightservices` (flightNumber, AircraftID, origin_airport, destination_airport, economy_fare, business_fare, first_class_fare, airline, number_of_stops, flight_type, departure_date, departure_times, arrival_date, arrival_times, duration)
-VALUES
-('F100', 'A001', 'JFK', 'LAX', 250, 500, 800, 'AA', 0, 'domestic', '2023-12-10', '15:00:00', '2023-12-10', '21:00:00', '06:00:00'),
-('F101', 'A002', 'LAX', 'JFK', 260, 520, 820, 'DL', 1, 'domestic', '2023-12-11', '16:00:00', '2023-12-11', '22:00:00', '06:00:00'),
-('F102', 'A003', 'JFK', 'AMS', 300, 600, 900, 'BA', 0, 'international', '2023-12-12', '17:00:00', '2023-12-13', '07:00:00', '14:00:00');
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS `ticketAdmin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ticketAdmin` (
-  `TicketNumber` varchar(10) NOT NULL,
-  `seatNumber` varchar(3) DEFAULT NULL,
-  `total_fare` float DEFAULT NULL,
-  `bookingFee` float DEFAULT NULL,
-  `purchaseDateTime` datetime DEFAULT NULL,
-  `Passenger_Name` varchar(50) DEFAULT NULL,
-  `first_name` varchar(25) DEFAULT NULL,
-  `last_name` varchar(25) DEFAULT NULL,
-  `class` varchar(10) DEFAULT NULL,
-  `isEconomy` tinyint(1) DEFAULT NULL,
-  `changeCancelFee` float DEFAULT NULL,
-  PRIMARY KEY (`TicketNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-LOCK TABLES `ticketAdmin` WRITE;
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1010', 300, '2023-01-01 10:00:00', 'John Doe', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1011', 300, '2023-01-02 10:00:00', 'Jane Doe', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1012', 300, '2023-01-03 10:00:00', 'Jim Beam', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1013', 300, '2023-01-04 10:00:00', 'Jill Hill', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1014', 300, '2023-01-05 10:00:00', 'Jack Black', 'Economy');
-
--- Inserts for F101
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1015', 350, '2023-01-06 10:00:00', 'Sam Smith', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1016', 350, '2023-01-07 10:00:00', 'Sara Stone', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1017', 350, '2023-01-08 10:00:00', 'Sue Sand', 'Economy');
-
--- Inserts for F102
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1018', 320, '2023-01-09 10:00:00', 'Mike Mountain', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1019', 320, '2023-01-10 10:00:00', 'Molly Mole', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1020', 320, '2023-01-11 10:00:00', 'Marge Major', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1021', 320, '2023-01-12 10:00:00', 'Matt Minor', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1022', 320, '2023-01-13 10:00:00', 'Martha Mars', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1023', 320, '2023-01-14 10:00:00', 'Martin Moon', 'Economy');
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) VALUES ('T1024', 320, '2023-01-15 10:00:00', 'Megan Meteor', 'Economy');
-
-UNLOCK TABLES;
-
-
-DROP TABLE IF EXISTS `ticketflightassociatedwithAdmin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ticketflightassociatedwithAdmin` (
-  `TicketNumber` varchar(10) NOT NULL,
-  `flightNumber` varchar(5) NOT NULL,
-  `fromAirport` varchar(3) DEFAULT NULL,
-  `toAirport` varchar(3) DEFAULT NULL,
-  `departureDate` date DEFAULT NULL,
-  `departureTime` time DEFAULT NULL,
-  PRIMARY KEY (`TicketNumber`,`flightNumber`),
-  KEY `flightNumber` (`flightNumber`),
-  KEY `fromAirport` (`fromAirport`),
-  KEY `toAirport` (`toAirport`),
-  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_1` FOREIGN KEY (`TicketNumber`) REFERENCES `ticketAdmin` (`TicketNumber`),
-  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_2` FOREIGN KEY (`flightNumber`) REFERENCES `flightservices` (`flightNumber`),
-  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_3` FOREIGN KEY (`fromAirport`) REFERENCES `airport` (`ThreeLetterID`),
-  CONSTRAINT `ticketflightassociatedwithAdmin_ibfk_4` FOREIGN KEY (`toAirport`) REFERENCES `airport` (`ThreeLetterID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
-
-LOCK TABLES `ticketflightassociatedwithAdmin` WRITE;
-
--- Flight F100 associations
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1010', 'F100');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1011', 'F100');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1012', 'F100');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1013', 'F100');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1014', 'F100');
-
--- Flight F101 associations
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1015', 'F101');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1016', 'F101');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1017', 'F101');
-
--- Flight F102 associations
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1018', 'F102');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1019', 'F102');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1020', 'F102');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1021', 'F102');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1022', 'F102');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1023', 'F102');
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) VALUES ('T1024', 'F102'); 
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS `transactionAdmin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `transactionAdmin` (
-  `accountID` varchar(20) NOT NULL,
-  `TicketNumber` varchar(10) NOT NULL,
-  `seatAvailable` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`accountID`,`TicketNumber`),
-  KEY `TicketNumber` (`TicketNumber`),
-  CONSTRAINT `transactionAdmin_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
-  CONSTRAINT `transactionAdmin_ibfk_2` FOREIGN KEY (`TicketNumber`) REFERENCES `ticketAdmin` (`TicketNumber`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
-LOCK TABLES `transactionAdmin` WRITE;
-
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1010', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1011', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer12', 'T1012', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer12', 'T1013', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1014', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1015', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer12', 'T1016', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer12', 'T1017', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1018', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1019', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer12', 'T1020', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer12', 'T1021', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1022', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer1', 'T1023', 1);
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) VALUES ('Customer12', 'T1024', 1);
-
-UNLOCK TABLES;
-
-
-LOCK TABLES `ticketAdmin` WRITE; 
-
--- Inserts for F001
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) 
-VALUES ('T1030', 300, '2023-02-01 10:00:00', 'Charlie Chaplin', 'Economy'),
-       ('T1031', 300, '2023-02-02 10:00:00', 'Diana Prince', 'Economy');
-
--- Inserts for F003
-INSERT INTO ticketAdmin (TicketNumber, total_fare, purchaseDateTime, Passenger_Name, class) 
-VALUES ('T1032', 500, '2023-02-03 10:00:00', 'Ethan Hunt', 'Economy'),
-       ('T1033', 500, '2023-02-04 10:00:00', 'Fiona Fantasy', 'Economy');
-
-UNLOCK TABLES;
-
-
-LOCK TABLES  `ticketflightassociatedwithAdmin` WRITE;
--- Flight F001 associations for new tickets
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) 
-VALUES ('T1030', 'F001'),
-       ('T1031', 'F001');
--- Flight F003 associations for new tickets
-INSERT INTO ticketflightassociatedwithAdmin (TicketNumber, flightNumber) 
-VALUES ('T1032', 'F003'),
-       ('T1033', 'F003');
-UNLOCK TABLES;
-
-
-LOCK TABLES  `transactionAdmin` WRITE;
-INSERT INTO transactionAdmin (accountID, TicketNumber, seatAvailable) 
-VALUES ('Customer1', 'T1030', 1),
-       ('Customer12', 'T1031', 1),
-       ('Customer1', 'T1032', 1),
-       ('Customer12', 'T1033', 1);
-UNLOCK TABLES;
+-- Dump completed on 2023-12-11 23:22:43
